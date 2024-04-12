@@ -7,6 +7,8 @@ import com.example.model.Penalty;
 import com.example.model.Reservation;
 
 import java.io.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -153,11 +155,17 @@ public class FileManager {
         for(File file : files) {
             file.delete();
         }
-        Set<Date> dates = sharedData.reservationList.keySet();
-        for (Date date : dates) {
-            List<Reservation> reservations = sharedData.reservationList.get(date);
-            File file = new File(RESERVATION + "/" + date.date + ".txt");
+
+        List<String> dates = dateGenerator();
+        for(String date: dates){
+            List<Reservation> reservations = sharedData.reservationList.get(new Date(date));
+            File file = new File(RESERVATION + "/" + date + ".txt");
             bw = new BufferedWriter(new FileWriter(file));
+
+            if(reservations == null) {
+                bw.close();
+                continue;
+            }
             for (Reservation reservation : reservations) {
                 bw.write(reservation.toString());
                 bw.newLine();
@@ -175,13 +183,17 @@ public class FileManager {
         for(File file : files) {
             file.delete();
         }
-        Set<Date> dates = sharedData.logs.keySet();
+        List<String> dates = dateGenerator();
+        for(String date: dates){
+            List<KLog> kLogs = sharedData.logs.get(new Date(date));
 
-        for (Date date : dates) {
-            List<KLog> kLogs = sharedData.logs.get(date);
-
-            File file = new File(LOG + "/" + date.date + ".txt");
+            File file = new File(LOG + "/" + date + ".txt");
             bw = new BufferedWriter(new FileWriter(file));
+
+            if(kLogs == null){
+                bw.close();
+                continue;
+            }
             for (KLog kLog : kLogs) {
                 bw.write(kLog.toString());
                 bw.newLine();
@@ -190,6 +202,23 @@ public class FileManager {
         }
 
         bw.close();
+    }
+
+    private List<String> dateGenerator() {
+        curTime = sharedData.currentTime;
+
+        // 날짜 형식을 지정
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+        // 입력된 문자열을 LocalDate 객체로 파싱
+        LocalDate date = LocalDate.parse(curTime.date, formatter);
+
+        List<String> dates = new ArrayList<>();
+        // 입력된 날짜를 포함하여 8개의 날짜(7일 후까지)를 리스트에 추가
+        for (int i = 0; i < 8; i++) {
+            dates.add(date.plusDays(i).format(formatter));
+        }
+
+        return dates;
     }
 
     private void saveCurrentTime() throws IOException {

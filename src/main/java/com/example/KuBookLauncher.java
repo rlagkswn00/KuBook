@@ -11,7 +11,7 @@ public class KuBookLauncher {
     public static void main(String[] args) throws IOException {
 
         FileManager fileManager = new FileManager();
-
+        System.out.println(SharedData.getInstance());
         changeTest();
 
         // TODO : 프로그램 끝날 때 fileManager.save 호출하세요.
@@ -21,7 +21,7 @@ public class KuBookLauncher {
 
     private static void changeTest() {
         SharedData sharedData = SharedData.getInstance();
-        sharedData.currentTime = new Date("20240412", "1530");
+        sharedData.currentTime = new Date("20240428", "1530");
         sharedData.penalties.put(
                 sharedData.currentTime,
                 Arrays.asList(new Penalty("202011247"), new Penalty("202011245"))
