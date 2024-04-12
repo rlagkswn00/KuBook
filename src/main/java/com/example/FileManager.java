@@ -79,8 +79,7 @@ public class FileManager {
         while ((line = br.readLine()) != null) {
             String[] splitedLine = line.split(",");
             validateKcube(splitedLine);
-
-
+            Kcube kcube = Kcube.from(splitedLine[0], splitedLine[1], splitedLine[2]);
             SharedData.getInstance()
                     .kcubes.add(kcube);
         }
