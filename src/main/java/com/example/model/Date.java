@@ -10,4 +10,9 @@ public class Date {
     public Date(String date) {
         this.date = date;
     }
+
+    public Date(String date, String time) {
+        this.date = date;
+        this.time = time;
+    }
 }

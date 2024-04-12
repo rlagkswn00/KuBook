@@ -14,4 +14,15 @@ public class Reservation {
     public String useTime;
     public String numOfPeople;
     public List<String> userIds;
+
+    @Override
+    public String toString() {
+        String str = "";
+        for(String userId : userIds) {
+            str += "," + userId ;
+        }
+        return name + "," + room + "," + startTime + "," + useTime + "," + numOfPeople
+                + str;
+
+    }
 }

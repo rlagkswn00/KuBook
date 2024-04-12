@@ -8,4 +8,9 @@ import lombok.Data;
 public class KLog {
     public String userId;
     public String time;
+
+    @Override
+    public String toString() {
+        return userId+","+time;
+    }
 }

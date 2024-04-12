@@ -5,24 +5,22 @@ import com.example.model.KLog;
 import com.example.model.Kcube;
 import com.example.model.Penalty;
 import com.example.model.Reservation;
-import lombok.extern.java.Log;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 public class FileManager {
     public static final String ETC = "data/etc";
     public static final String KCUBE = "data/etc/kcube.txt";
     public static final String LOG = "data/log";
     public static final String RESERVATION = "data/reservation";
-    public static final String CURRENT_TIME = "currentTime.txt";
+    public static final String CURRENT_TIME = "data/currentTime.txt";
+    public SharedData sharedData = SharedData.getInstance();
+    public Date curTime;
     public BufferedReader br;
+    public BufferedWriter bw;
 
     FileManager() throws IOException {
         load();
@@ -139,4 +137,92 @@ public class FileManager {
                     reservationList.put(date, reservations);
         }
     }
+
+    public void save() throws IOException {
+        curTime = sharedData.currentTime;
+        savePenalty();
+        saveCurrentTime();
+        saveLog();
+        saveReservation();
+    }
+
+    private void saveReservation() throws IOException {
+        File logDir = new File(RESERVATION);
+        File[] files = logDir.listFiles();
+
+        for(File file : files) {
+            file.delete();
+        }
+        Set<Date> dates = sharedData.reservationList.keySet();
+        for (Date date : dates) {
+            List<Reservation> reservations = sharedData.reservationList.get(date);
+            File file = new File(RESERVATION + "/" + date.date + ".txt");
+            bw = new BufferedWriter(new FileWriter(file));
+            for (Reservation reservation : reservations) {
+                bw.write(reservation.toString());
+                bw.newLine();
+                bw.flush();
+            }
+        }
+
+        bw.close();
+    }
+
+    private void saveLog() throws IOException {
+        File logDir = new File(LOG);
+        File[] files = logDir.listFiles();
+
+        for(File file : files) {
+            file.delete();
+        }
+        Set<Date> dates = sharedData.logs.keySet();
+
+        for (Date date : dates) {
+            List<KLog> kLogs = sharedData.logs.get(date);
+
+            File file = new File(LOG + "/" + date.date + ".txt");
+            bw = new BufferedWriter(new FileWriter(file));
+            for (KLog kLog : kLogs) {
+                bw.write(kLog.toString());
+                bw.newLine();
+                bw.flush();
+            }
+        }
+
+        bw.close();
+    }
+
+    private void saveCurrentTime() throws IOException {
+        File file = new File(CURRENT_TIME);
+        bw = new BufferedWriter(new FileWriter(file, false));
+        bw.write(curTime.date + curTime.time);
+        bw.flush();
+        bw.close();
+    }
+
+    private void savePenalty() throws IOException {
+        File etcDir = new File(ETC);
+        File[] files = etcDir.listFiles();
+
+        for(File file : files) {
+            if(file.getName().startsWith("p")) {
+                file.delete();
+                break;
+            }
+        }
+
+        List<Penalty> penalties = sharedData.penalties.get(curTime);
+        if(penalties == null) {
+            return;
+        }
+        File file = new File(ETC + "/p" + curTime.date + ".txt");
+        bw = new BufferedWriter(new FileWriter(file));
+        for (Penalty penalty : penalties) {
+            bw.write(penalty.userId);
+            bw.newLine();
+            bw.flush();
+        }
+        bw.close();
+    }
+
 }
