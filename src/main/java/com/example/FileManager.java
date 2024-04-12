@@ -10,8 +10,9 @@ import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
 
 public class FileManager {
     public static final String ETC = "data/etc";
@@ -60,11 +61,16 @@ public class FileManager {
             penalties.add(new Penalty(line.trim()));
         }
 
-        int dotIndex = penaltyFile.getName().lastIndexOf(".");
-        String dateStr = penaltyFile.getName().substring(1, dotIndex);
+        String dateStr = parseFileName(penaltyFile, 1);
         Date date = new Date(dateStr);
 
         SharedData.getInstance().penalties.put(date,penalties);
+    }
+
+    private String parseFileName(File file, int beginIndex) {
+        int dotIndex = file.getName().lastIndexOf(".");
+        String dateStr = file.getName().substring(beginIndex, dotIndex);
+        return dateStr;
     }
 
     private void loadKcube() throws IOException {
@@ -72,19 +78,28 @@ public class FileManager {
         String line = "";
         while ((line = br.readLine()) != null) {
             String[] splitedLine = line.split(",");
-            Kcube kcube = Kcube.builder()
-                    .name(splitedLine[0])
-                    .room(splitedLine[1])
-                    .max(splitedLine[2]).build();
+            validateKcube(splitedLine);
+
+
             SharedData.getInstance()
                     .kcubes.add(kcube);
         }
     }
 
+    private void validateKcube(String[] splitedLine) {
+        if (splitedLine.length != 3) {
+            System.out.println("파일명 혹은 파일형식에 문제가 있습니다 ! (기타파일)");
+        }
+
+    }
+
     private void loadLog() throws IOException {
         File dir = new File(LOG);
         File[] files = dir.listFiles();
-
+        if(!validate8Days(files)){
+            System.out.println("파일명 혹은 파일형식에 문제가 있습니다 ! (예약로그)");
+            System.exit(0);
+        }
         for (File file : files) {
             br = new BufferedReader(new FileReader(file));
             List<KLog> kLogs = new ArrayList<>();
@@ -99,8 +114,7 @@ public class FileManager {
                 kLogs.add(kLog);
             }
 
-            int dotIndex = file.getName().lastIndexOf("."); // 파일 명에서 날짜 파싱
-            String dateStr = file.getName().substring(0, dotIndex);
+            String dateStr = parseFileName(file, 0);
             Date date = new Date(dateStr);
 
             SharedData.getInstance().logs.put(date, kLogs);
@@ -124,6 +138,10 @@ public class FileManager {
     private void loadReservation() throws IOException {
         File dir = new File(RESERVATION);
         File[] files = dir.listFiles();
+        if(!validate8Days(files)){
+            System.out.println("파일명 혹은 파일형식에 문제가 있습니다 ! (예약정보)");
+            System.exit(0);
+        }
         for (File file : files) {
             br = new BufferedReader(new FileReader(file));
             List<Reservation> reservations = new ArrayList<>();
@@ -146,13 +164,28 @@ public class FileManager {
                         .build();
                 reservations.add(reservation);
             }
-            int dotIndex = file.getName().lastIndexOf("."); // 파일 명에서 날짜 파싱
-            String dateStr = file.getName().substring(0, dotIndex);
+            String dateStr = parseFileName(file, 0);
             Date date = new Date(dateStr);
 
             SharedData.getInstance().
                     reservationList.put(date, reservations);
         }
+    }
+
+    private boolean validate8Days(File[] files) {
+        if (files.length != 8) {
+            return false;
+        }
+        Arrays.sort(files, Comparator.comparing(String::valueOf));
+        File file = files[0];
+        String fileName = parseFileName(file,0);
+        List<String> dates = dateGenerator(fileName);
+        for (int i = 0; i < 8; i++) {
+            if (!parseFileName(files[i], 0).equals(dates.get(i))) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public void save() throws IOException {
@@ -171,7 +204,7 @@ public class FileManager {
             file.delete();
         }
 
-        List<String> dates = dateGenerator();
+        List<String> dates = dateGenerator(curTime.date);
         for(String date: dates){
             List<Reservation> reservations = sharedData.reservationList.get(new Date(date));
             File file = new File(RESERVATION + "/" + date + ".txt");
@@ -198,7 +231,7 @@ public class FileManager {
         for(File file : files) {
             file.delete();
         }
-        List<String> dates = dateGenerator();
+        List<String> dates = dateGenerator(curTime.date);
         for(String date: dates){
             List<KLog> kLogs = sharedData.logs.get(new Date(date));
 
@@ -219,13 +252,12 @@ public class FileManager {
         bw.close();
     }
 
-    private List<String> dateGenerator() {
-        curTime = sharedData.currentTime;
+    private List<String> dateGenerator(String startDate) {
 
         // 날짜 형식을 지정
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
         // 입력된 문자열을 LocalDate 객체로 파싱
-        LocalDate date = LocalDate.parse(curTime.date, formatter);
+        LocalDate date = LocalDate.parse(startDate, formatter);
 
         List<String> dates = new ArrayList<>();
         // 입력된 날짜를 포함하여 8개의 날짜(7일 후까지)를 리스트에 추가
