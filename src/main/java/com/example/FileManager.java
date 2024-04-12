@@ -33,6 +33,7 @@ public class FileManager {
         loadLog();
         loadKcube();
         loadPenalty();
+        loadCurrentTime();
     }
 
     private void loadPenalty() throws IOException {
@@ -103,6 +104,20 @@ public class FileManager {
             Date date = new Date(dateStr);
 
             SharedData.getInstance().logs.put(date, kLogs);
+        }
+    }
+    private void loadCurrentTime() throws IOException {
+        File file = new File(CURRENT_TIME);
+
+        if(!file.exists()) {
+            return;
+        }
+        br = new BufferedReader(new FileReader(file));
+
+        String line = "";
+
+        while ((line = br.readLine()) != null) {
+            sharedData.currentTime = new Date(line.substring(0,8),line.substring(8));
         }
     }
 
