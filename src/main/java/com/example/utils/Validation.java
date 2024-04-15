@@ -3,6 +3,8 @@ package com.example.utils;
 import com.example.SharedData;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -99,6 +101,22 @@ public class Validation {
 
         } catch (NumberFormatException e) {
             log.error("날짜는 숫자로 이루어져야 합니다.");
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean existFile(File file) throws IOException {
+        if (!file.exists()) {
+            file.createNewFile();
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean existDir(File file) {
+        if (!file.exists()) {
+            file.mkdir();
             return false;
         }
         return true;

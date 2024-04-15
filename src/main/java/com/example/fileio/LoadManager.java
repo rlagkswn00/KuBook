@@ -17,7 +17,11 @@ import static com.example.fileio.FilePath.*;
 public class LoadManager {
 
     private static LoadManager instance;
-    private LoadManager(){}
+    private BufferedReader br;
+    private SharedData sharedData = SharedData.getInstance();
+
+    private LoadManager() {
+    }
 
     public static LoadManager getInstance() {
         if (instance == null) {
@@ -26,13 +30,10 @@ public class LoadManager {
         return instance;
     }
 
-    private BufferedReader br;
-    private SharedData sharedData = SharedData.getInstance();
-
     public void loadCurrentTime() throws IOException {
-        File file = new File(CURRENT_TIME);
+        File file = new File(CURRENT_TIME_TXT);
 
-        if(!file.exists()) {
+        if (!file.exists()) {
             return;
         }
         br = new BufferedReader(new FileReader(file));
@@ -40,15 +41,15 @@ public class LoadManager {
         String line;
 
         while ((line = br.readLine()) != null) {
-            sharedData.currentTime = new Date(line.substring(0,8),line.substring(8));
+            sharedData.currentTime = new Date(line.substring(0, 8), line.substring(8));
         }
     }
 
     public void loadReservation() throws IOException {
-        File dir = new File(RESERVATION);
+        File dir = new File(RESERVATION_DIR);
         File[] files = dir.listFiles();
-        if(files == null || files.length == 0) return;
-        if(!validate8Days(files)){
+        if (files == null || files.length == 0) return;
+        if (!validate8Days(files)) {
             System.err.println("파일명 혹은 파일형식에 문제가 있습니다 ! (예약정보)");
             System.exit(1);
         }
@@ -75,11 +76,11 @@ public class LoadManager {
     }
 
     public void loadLog() throws IOException {
-        File dir = new File(LOG);
+        File dir = new File(LOG_DIR);
         File[] files = dir.listFiles();
-        if(files == null || files.length == 0) return;
+        if (files == null || files.length == 0) return;
 
-        if(!validate8Days(files)){
+        if (!validate8Days(files)) {
             System.err.println("파일명 혹은 파일형식에 문제가 있습니다 ! (예약로그)");
             System.exit(1);
         }
@@ -102,7 +103,11 @@ public class LoadManager {
     }
 
     public void loadKcube() throws IOException {
-        br = new BufferedReader(new FileReader(KCUBE));
+        File file = new File(KCUBE_TXT);
+        if (!file.exists()) {
+            throw new RuntimeException("파일형식에 문제가 있습니다 ! (Kcube)");
+        }
+        br = new BufferedReader(new FileReader(file));
         String line = "";
         while ((line = br.readLine()) != null) {
             String[] splitedLine = line.split(",");
@@ -113,15 +118,27 @@ public class LoadManager {
     }
 
     public void loadPenalty() throws IOException {
-        File dir = new File(ETC);
-        File[] files = dir.listFiles();
+        File dir = new File(ETC_DIR);
 
+        File[] files = dir.listFiles();
+        /**
+         * ETC폴더가 없으면 문제 생기기에 예외처리 필요
+         */
+        if (files == null) {
+            return;
+        }
+        /**
+         * ETC폴더가 있는데 파일이 없으면 문제 생기기에 예외처리 필요
+         */
+        if (files.length == 0) {
+            return;
+        }
         //패널티 파일 찾기
         File penalizedUsersFile = Arrays.stream(files)
                 .filter(file -> file.getName().startsWith("p"))
                 .findFirst().orElse(null);
 
-        if(penalizedUsersFile == null) return;
+        if (penalizedUsersFile == null) return;
 
         br = new BufferedReader(new FileReader(penalizedUsersFile));
         List<PenaltyUser> penalizedUsers = new ArrayList<>();
@@ -136,8 +153,6 @@ public class LoadManager {
         SharedData.getInstance().penalizedUsers.put(new Date(dateStr), penalizedUsers);
     }
 
-
-
     private String parseFileName(File file, int beginIndex) {
         int dotIndex = file.getName().lastIndexOf(".");
         String dateStr = file.getName().substring(beginIndex, dotIndex);
@@ -150,7 +165,7 @@ public class LoadManager {
         }
         Arrays.sort(files, Comparator.comparing(String::valueOf));
         File file = files[0];
-        String fileName = parseFileName(file,0);
+        String fileName = parseFileName(file, 0);
         List<String> dates = FileManager.dateGenerator(fileName);
         for (int i = 0; i < 8; i++) {
             if (!parseFileName(files[i], 0).equals(dates.get(i))) {

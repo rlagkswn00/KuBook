@@ -1,15 +1,12 @@
 package com.example.fileio;
 
 import com.example.SharedData;
-import com.example.model.*;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.*;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 
 @Slf4j
