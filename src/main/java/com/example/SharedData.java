@@ -13,7 +13,7 @@ public class SharedData {
 
     public Date currentTime;
     public List<Kcube> kcubes = new ArrayList<>();
-    public Map<Date, List<Penalty>> penalties = new HashMap<>();
+    public Map<Date, List<PenaltyUser>> penalizedUsers = new HashMap<>();
     public Map<Date, List<KLog>> logs = new HashMap<>();
     public Map<Date, List<Reservation>> reservationList = new HashMap<>();
 
@@ -24,5 +24,16 @@ public class SharedData {
             instance = new SharedData();
         }
         return instance;
+    }
+
+    @Override
+    public String toString() {
+        return "SharedData{" + "\n" +
+                "* currentTime=" + currentTime + "\n" +
+                "* kcubes=" + kcubes + "\n" +
+                "* penalizedUsers=" + penalizedUsers + "\n" +
+                "* logs=" + logs + "\n" +
+                "* reservationList=" + reservationList + "\n" +
+                '}';
     }
 }
