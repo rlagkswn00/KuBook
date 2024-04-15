@@ -228,15 +228,13 @@ public class KuBookLauncher {
                 /*문자 예외처리*/
                 String currentcancel = sc.nextLine();
                 if(currentcancel.equals("Y")){
-                    //sharedData에 취소 처리
+                    /*sharedData에 취소 처리
                     List<Reservation> finalcanlist = sharedData.reservationList.get(canceldate);
                     for (int i = 0; i < finalcanlist.size(); i++) {
                         if (finalcanlist.get(i).equals(cancellist.get(Integer.parseInt(cancel) - 1))) {
                             sharedData.reservationList.get(canceldate).remove(finalcanlist.get(i));
                         }
-                    }
-                    String test = sharedData.toString();
-                    System.out.println(test);
+                    }*/
                     System.out.println("취소되었습니다. 당일 이용이 불가합니다.");
                     System.out.println("5초 후 메뉴로 돌아갑니다.\n");
                     //패널티 학번 추가
@@ -248,13 +246,13 @@ public class KuBookLauncher {
                 }
             }
             else {
-                //sharedData에 취소 처리
+                /*sharedData에 취소 처리
                 List<Reservation> finalcanlist = sharedData.reservationList.get(canceldate);
                 for (int i = 0; i < finalcanlist.size(); i++) {
                     if (finalcanlist.get(i).equals(cancellist.get(Integer.parseInt(cancel) - 1))) {
                         sharedData.reservationList.get(canceldate).remove(finalcanlist.get(i));
                     }
-                }
+                }*/
                 System.out.println("취소되었습니다. 5초 후 메뉴로 돌아갑니다.\n");
             }
         }
