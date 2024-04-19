@@ -52,7 +52,7 @@ public class KuBookLauncher {
                 System.out.println();
             }
         }
-
+        log.info("load 성공\n"+SharedData.getInstance().toString());
         while(true){
             System.out.print("학번을 입력해주세요 (ex. 202012345) : ");
 
@@ -278,7 +278,7 @@ public class KuBookLauncher {
             }
         }
 
-        System.out.println("예약이 완료되었습니다. 5초 후 메뉴로 돌아갑니다.");
+        System.out.println("예약이 완료되었습니다. 5초 후 메뉴로 돌아갑니다.\n");
         try {
             Thread.sleep(5000);
         } catch (InterruptedException e) {
@@ -287,11 +287,11 @@ public class KuBookLauncher {
     }
 
     public static void menu2(List<String> dates, String ID){
-        //기획서 -> 예약한 날짜 알수 없음...
         System.out.println("\n[ 건물, 호실, 사용할 날짜, 예약 시작 시간, 이용시간, (학번들) ]");
+        boolean reserveflag = true;
         for(int i=0; i<8; i++){
             List<Reservation> reslist = sharedData.reservationList.get(new Date(dates.get(i)));
-            if(reslist != null){
+            if(!reslist.isEmpty()){
                 for(int j=0; j<reslist.size(); j++){
                     if(reslist.get(j).userIds.contains(ID)){
                         System.out.print(reslist.get(j).name+", "+reslist.get(j).room+"호실, "
@@ -300,7 +300,12 @@ public class KuBookLauncher {
                         ListtoString(others, ID);
                     }
                 }
+                reserveflag = false;
             }
+        }
+        if(reserveflag){
+            System.out.println("예약목록이 없습니다.");
+
         }
         Scanner sc = new Scanner(System.in);
         while(true) {
@@ -320,7 +325,7 @@ public class KuBookLauncher {
         List<Map<Date,Reservation>> cancellist = new ArrayList<>(); //예약 취소 가능 목록
         for(int i=0; i<8; i++){
             List<Reservation> reslist = sharedData.reservationList.get(new Date(dates.get(i)));
-            if(reslist != null){
+            if(!reslist.isEmpty()){
                 for(int j=0; j<reslist.size(); j++){
                     if(reslist.get(j).userIds.contains(ID)){
                         System.out.print(reservenum+". "+reslist.get(j).name+", "+reslist.get(j).room+"호실, "
@@ -354,38 +359,96 @@ public class KuBookLauncher {
             for(Date key:cancellist.get(Validation.selectedCancelNum-1).keySet()){
                 canceldate = key;
             }
+            List<Reservation> pfinalcanlist = sharedData.reservationList.get(canceldate); //취소 날짜의 예약 목록
+            List<String> pIDs = cancellist.get(Integer.parseInt(cancel)-1).get(canceldate).userIds; //학번들
             if(canceldate.date.equals(sharedData.currentTime.date)){
                 String currentcancel;
                 do {
                     System.out.print("당일 취소하실 경우 패널티가 부과됩니다. 패널티 부과 시 당일 케이큐브 이용이 불가합니다.\n그래도 취소하시겠습니까? (ex. Y, N ) : ");
                     /*문자 예외처리*/
                     currentcancel = sc.nextLine();
-                    if (currentcancel.equals("Y")) {
-                    /*sharedData에 취소 처리
-                    List<Reservation> finalcanlist = sharedData.reservationList.get(canceldate);
-                    for (int i = 0; i < finalcanlist.size(); i++) {
-                        if (finalcanlist.get(i).equals(cancellist.get(Integer.parseInt(cancel) - 1))) {
-                            sharedData.reservationList.get(canceldate).remove(finalcanlist.get(i));
+                    if(currentcancel.equals("Y")){
+                        //sharedData에 예약자, 동반 예약자 당일 예약 취소 처리
+                        for(String pID:pIDs){
+                            /*log 현재 파일에 저장된 데이터로는 오류 발생...일단 주석 처리
+                            sharedData.penalizedUsers.get(canceldate).removeIf(n->n.userId.contains(pID));
+                            */
+                            sharedData.reservationList.get(canceldate).removeIf(n->n.userIds.contains(pID));
+                            //패널티 학번들 추가
+                            PenaltyUser pu = (new PenaltyUser(pID));
+                            sharedData.penalizedUsers.get(canceldate).add(pu);
                         }
-                    }*/
-                        System.out.println("취소되었습니다. 당일 이용이 불가합니다.");
+
+                        //취소된 후 예약목록
+                        System.out.println();
+                        cancellist.removeIf(n->n.containsKey(new Date(sharedData.currentTime.date)));
+                        if(!cancellist.isEmpty()){
+                            reservenum=1;
+                            Date prdate = null;
+                            for(int i=0; i<cancellist.size(); i++){
+                                for(Date prkey:cancellist.get(i).keySet()) {
+                                    prdate = prkey;
+                                }
+                                System.out.print(+reservenum+". "+cancellist.get(i).get(prdate).name+", "+cancellist.get(i).get(prdate).room+"호실, "
+                                        + prdate.date+", "+cancellist.get(i).get(prdate).startTime+"시, "+cancellist.get(i).get(prdate).useTime+"h, ");
+                                List<String> others = cancellist.get(i).get(prdate).userIds;
+                                ListtoString(others, ID);
+                                reservenum++;
+                            }
+                        }
+                        else{
+                            System.out.println("예약목록이 없습니다.");
+                        }
+                        System.out.println("예약이 취소되었습니다. 당일 이용이 불가합니다.");
                         System.out.println("5초 후 메뉴로 돌아갑니다.\n");
-                        //패널티 학번 추가
-                        //PenaltyUser pu = new PenaltyUser(ID);
-                        //sharedData.penalizedUsers.get(sharedData.currentTime).add(pu);
                     } else if (currentcancel.equals("N")) {
                         System.out.println("5초 후 메뉴로 돌아갑니다.\n");
                     }
-                } while(Validation.validateSameDayCanceling(currentcancel));
+                } while(!Validation.validateSameDayCanceling(currentcancel));
             }
             else {
-                /*sharedData에 취소 처리
-                List<Reservation> finalcanlist = sharedData.reservationList.get(canceldate);
-                for (int i = 0; i < finalcanlist.size(); i++) {
-                    if (finalcanlist.get(i).equals(cancellist.get(Integer.parseInt(cancel) - 1))) {
-                        sharedData.reservationList.get(canceldate).remove(finalcanlist.get(i));
+                //log 현재 파일에 저장된 데이터로는 오류 발생...일단 주석 처리
+                /*int cancelusetime = Integer.parseInt(cancellist.get(Integer.parseInt(cancel)-1).get(canceldate).useTime); //취소되는 시간
+                for(int i=0; i<pIDs.size(); i++){
+                    for(int j=0; j<sharedData.logs.get(canceldate).size(); j++){
+                        if(sharedData.logs.get(canceldate).get(j).userId.equals(pIDs.get(i))) {
+                            int canceltime = Integer.parseInt(sharedData.logs.get(canceldate).get(j).useTime)-cancelusetime;
+                            sharedData.logs.get(canceldate).get(j).setUseTime(Integer.toString(canceltime));
+                            break;
+                        }
                     }
-                }*/
+                }
+                sharedData.logs.get(canceldate).removeIf(n->n.useTime.equals("0"));
+                */
+
+                //sharedData에 취소 처리
+                for (int i = 0; i < pfinalcanlist.size(); i++) {
+                    if (pfinalcanlist.get(i).equals(cancellist.get(Integer.parseInt(cancel) - 1).get(canceldate))) {
+                        sharedData.reservationList.get(canceldate).remove(i);
+                        break;
+                    }
+                }
+
+                //취소된 후 예약목록
+                cancellist.remove(Integer.parseInt(cancel)-1);
+                if(!cancellist.isEmpty()){
+                    System.out.println();
+                    reservenum=1;
+                    Date rdate = null;
+                    for(int i=0; i<cancellist.size(); i++){
+                        for(Date rkey:cancellist.get(i).keySet()) {
+                            rdate = rkey;
+                        }
+                        System.out.print(+reservenum+". "+cancellist.get(i).get(rdate).name+", "+cancellist.get(i).get(rdate).room+"호실, "
+                                + rdate.date+", "+cancellist.get(i).get(rdate).startTime+"시, "+cancellist.get(i).get(rdate).useTime+"h, ");
+                        List<String> others = cancellist.get(i).get(rdate).userIds;
+                        ListtoString(others, ID);
+                        reservenum++;
+                    }
+                }
+                else{
+                    System.out.println("\n예약목록이 없습니다.");
+                }
                 System.out.println("취소되었습니다. 5초 후 메뉴로 돌아갑니다.\n");
             }
         }
