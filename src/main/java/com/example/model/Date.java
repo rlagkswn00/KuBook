@@ -23,9 +23,14 @@ public class Date {
     public int getMonth(){
         return Integer.parseInt(date.substring(4,6));
     }
+
     public static Date from(String date, String time) {
         Validation.validateDate(date);
         Validation.validateTime(time);
         return new Date(date, time);
+    }
+
+    public static Date fromWithNoValidation (String date, String time){
+        return new Date(date,time);
     }
 }
