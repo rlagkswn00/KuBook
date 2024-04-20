@@ -46,13 +46,28 @@ public class KuBookLauncher {
             time = sc.nextLine();
             if(Validation.validateTime(time)){
                  /*현재 시간 예외처리에 따른 sharedData penalty, log, reservation update 처리*/
+                if(Integer.parseInt(sharedData.currentTime.date)<Integer.parseInt(date)){  //currentTime 이후 날짜인 경우
+                    List<PenaltyUser> penaltyUsers = new ArrayList<>();
+                    sharedData.penalizedUsers.clear();
+                    sharedData.penalizedUsers.put(new Date(date), penaltyUsers); //당일 패널티 목록 새로 생성
+                    int tempdate = Integer.parseInt(date);
+                    sharedData.logs.keySet().removeIf(r-> (Integer.parseInt(r.date) < tempdate));
+                    sharedData.reservationList.keySet().removeIf(r -> (Integer.parseInt(r.date) < tempdate));
+                    for(int i=0; i<8; i++){
+                        if(!sharedData.logs.containsKey(new Date(dates.get(i)))) {//해당 날짜가 없는 경우
+                            List<KLog> kLogs = new ArrayList<>();
+                            sharedData.logs.put(new Date(dates.get(i)), kLogs);
+                            List<Reservation> reservations = new ArrayList<>();
+                            sharedData.reservationList.put(new Date(dates.get(i)), reservations);
+                        }
+                    }
+                }
                 sharedData.currentTime = new Date(date, time);
                 break;
             }else{
                 System.out.println();
             }
         }
-        log.info("load 성공\n"+SharedData.getInstance().toString());
         while(true){
             System.out.print("학번을 입력해주세요 (ex. 202012345) : ");
 
