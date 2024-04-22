@@ -17,6 +17,8 @@ public class Validation {
     public static int selectedCancelNum;
     public static int selectedReservationDate;
 
+    public static boolean isTheSameDay = false;
+
     public static boolean validateUserId(String userId) {
         if(userId.length() != 9) {
             log.error("학번은 9자리여야 합니다.");
@@ -89,10 +91,14 @@ public class Validation {
 
             DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("MMdd");
             String monthDayString = localDate.format(formatter1);
-            
-            if(Integer.parseInt(monthDayString) < Integer.parseInt(sharedData.currentTime.date.substring(4))){
+
+            isTheSameDay=false;
+
+            if(Integer.parseInt(monthDayString) < Integer.parseInt(sharedData.currentTime.date.substring(4,8))) {
                 log.error("현재 날짜보다 예약할 날짜가 이후여야 합니다");
                 return false;
+            }else if(Integer.parseInt(monthDayString)==Integer.parseInt(sharedData.currentTime.date.substring(4,8))){
+                isTheSameDay=true;
             }
         } catch (DateTimeException e) {
             log.error("날짜형식은 yyyyMMdd여야 합니다.");
@@ -111,12 +117,17 @@ public class Validation {
             log.error("시간은 4자리로 적어주세요");
             return false;
         }
-        
+
         try {
             int hour = Integer.parseInt(time.substring(0, 2));
             int minute= Integer.parseInt(time.substring(2, 4));
             if(hour < 0 || hour>23 || minute < 0 || minute > 59) {
                 log.error("00시 ~ 23시, 00분 ~ 59분 만 입력 가능합니다.");
+                return false;
+            }
+
+            if(isTheSameDay && (Integer.parseInt(sharedData.currentTime.time) > Integer.parseInt(time))){
+                log.error("현재 시간보다 예약할 시간이 이후여야 합니다");
                 return false;
             }
 
