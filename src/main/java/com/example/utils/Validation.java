@@ -82,7 +82,18 @@ public class Validation {
                 log.error("날짜는 1900년 이상 2999년 이하여야 합니다.");
                 return false;
             }
+            if(year < Integer.parseInt(sharedData.currentTime.date.substring(0,4))){
+                log.error("현재 날짜보다 예약할 날짜가 이후여야 합니다");
+                return false;
+            }
 
+            DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("MMdd");
+            String monthDayString = localDate.format(formatter1);
+            
+            if(Integer.parseInt(monthDayString) < Integer.parseInt(sharedData.currentTime.date.substring(4))){
+                log.error("현재 날짜보다 예약할 날짜가 이후여야 합니다");
+                return false;
+            }
         } catch (DateTimeException e) {
             log.error("날짜형식은 yyyyMMdd여야 합니다.");
             return false;
@@ -96,6 +107,11 @@ public class Validation {
             return false;
         }
 
+        if(time.length()!=4){
+            log.error("시간은 4자리로 적어주세요");
+            return false;
+        }
+        
         try {
             int hour = Integer.parseInt(time.substring(0, 2));
             int minute= Integer.parseInt(time.substring(2, 4));
