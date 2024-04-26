@@ -23,6 +23,12 @@ public class Date {
     public int getMonth(){
         return Integer.parseInt(date.substring(4,6));
     }
+    public int getDay(){
+        return Integer.parseInt(date.substring(6,8));
+    }
+    public int getMontToDay(){
+        return Integer.parseInt(date.substring(4,8));
+    }
 
     public static Date from(String date, String time) {
         Validation.validateDate(date);

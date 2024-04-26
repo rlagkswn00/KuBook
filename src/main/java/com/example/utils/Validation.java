@@ -84,9 +84,11 @@ public class Validation {
                 log.error("날짜는 1900년 이상 2999년 이하여야 합니다.");
                 return false;
             }
-            if(year < Integer.parseInt(sharedData.currentTime.date.substring(0,4))){
+            if(year < sharedData.currentTime.getYear()){
                 log.error("현재 날짜보다 예약할 날짜가 이후여야 합니다");
                 return false;
+            }else if(year > sharedData.currentTime.getYear()){
+                return true;
             }
 
             DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("MMdd");
@@ -94,11 +96,11 @@ public class Validation {
 
             isTheSameDay=false;
 
-            if(Integer.parseInt(monthDayString) < Integer.parseInt(sharedData.currentTime.date.substring(4,8))) {
+            if(Integer.parseInt(monthDayString) < sharedData.currentTime.getMontToDay()) {
                 log.error("현재 날짜보다 예약할 날짜가 이후여야 합니다");
                 return false;
-            }else if(Integer.parseInt(monthDayString)==Integer.parseInt(sharedData.currentTime.date.substring(4,8))){
-                isTheSameDay=true;
+            }else if(Integer.parseInt(monthDayString)==sharedData.currentTime.getMontToDay()){
+                isTheSameDay=true; // TODO : 어디에 쓰이는 변수인가요?
             }
         } catch (DateTimeException e) {
             log.error("날짜형식은 yyyyMMdd여야 합니다.");
