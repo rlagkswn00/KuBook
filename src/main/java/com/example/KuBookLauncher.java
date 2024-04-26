@@ -142,21 +142,20 @@ public class KuBookLauncher {
             int totPrintedDate=8;
 
             if(Validation.validateReservationDate(reservedate, totPrintedDate)){
-                ;
-            }else{
-                System.out.println();
-            }
-            /*패널티 대상자 예외처리 필요*/
-            if(sharedData.penalizedUsers.get(Date.fromWithNoValidation(dates.get(0),null))!=null) {
-                for (int i = 0; i < sharedData.penalizedUsers.get(Date.fromWithNoValidation(dates.get(0), null)).size(); i++) {
-                    if (sharedData.penalizedUsers.get(Date.fromWithNoValidation(dates.get(0), null)).get(i).getUserId().equals(ID) && Validation.selectedReservationDate == 0) {
-                        log.error("해당 날짜는 페널티에 의해 예약하실 수 없습니다.");
-                        continue label;
+                /*패널티 대상자 예외처리 필요*/
+                if(sharedData.penalizedUsers.get(Date.fromWithNoValidation(dates.get(0),null))!=null) {
+                    for (int i = 0; i < sharedData.penalizedUsers.get(Date.fromWithNoValidation(dates.get(0), null)).size(); i++) {
+                        if (sharedData.penalizedUsers.get(Date.fromWithNoValidation(dates.get(0), null)).get(i).getUserId().equals(ID) && Validation.selectedReservationDate == 0) {
+                            log.error("해당 날짜는 페널티에 의해 예약하실 수 없습니다.");
+                            continue label;
+                        }
                     }
                 }
                 break;
+            }else {
+                System.out.println();
             }
-            break;
+
         }
 
 
@@ -303,34 +302,34 @@ public class KuBookLauncher {
 
     public static void menu2(List<String> dates, String ID){
         System.out.println("\n[ 건물, 호실, 사용할 날짜, 예약 시작 시간, 이용시간, (학번들) ]");
-        boolean reserveflag = true;
-        for(int i=0; i<8; i++){
-            List<Reservation> reslist = sharedData.reservationList.get(new Date(dates.get(i)));
-            if(!reslist.isEmpty()){
-                for(int j=0; j<reslist.size(); j++){
-                    if(reslist.get(j).userIds.contains(ID)){
-                        System.out.print(reslist.get(j).name+", "+reslist.get(j).room+"호실, "
-                                + dates.get(i)+", "+reslist.get(j).startTime+"시, "+reslist.get(j).useTime+"h, ");
-                        List<String> others = reslist.get(j).userIds;
-                        ListtoString(others, ID);
+        while(true){
+            boolean reserveflag = true;
+            for(int i=0; i<8; i++){
+                List<Reservation> reslist = sharedData.reservationList.get(new Date(dates.get(i)));
+                if(!reslist.isEmpty()){
+                    for(int j=0; j<reslist.size(); j++){
+                        if(reslist.get(j).userIds.contains(ID)){
+                            System.out.print(reslist.get(j).name+", "+reslist.get(j).room+"호실, "
+                                    + dates.get(i)+", "+reslist.get(j).startTime+"시, "+reslist.get(j).useTime+"h, ");
+                            List<String> others = reslist.get(j).userIds;
+                            ListtoString(others, ID);
+                        }
                     }
+                    reserveflag = false;
                 }
-                reserveflag = false;
             }
-        }
-        if(reserveflag){
-            System.out.println("예약목록이 없습니다.");
+            if(reserveflag){
+                System.out.println("예약목록이 없습니다.");
 
-        }
-        Scanner sc = new Scanner(System.in);
-        while(true) {
-            System.out.println("처음으로 돌아가려면 B를 입력하세요.");
+            }
+            Scanner sc = new Scanner(System.in);
+            System.out.print("처음으로 돌아가려면 B를 입력하세요. (ex. B) : ");
             String Back = sc.nextLine();
             if(Back.equals("B")) {
                 System.out.println("\n처음으로 돌아갑니다.\n");
                 break;
             }
-            else System.err.println("오류! 잘못된 입력입니다. B만 입력가능합니다.");
+            else System.out.println("\n오류! 잘못된 입력입니다. B만 입력가능합니다.\n");
         }
     }
 
