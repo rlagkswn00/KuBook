@@ -16,7 +16,7 @@ public class KuBookLauncher {
     public static SharedData sharedData = SharedData.getInstance();
     public static void main(String[] args) throws IOException {
         FileManager fileManager = new FileManager();
-        log.info("load 성공\n"+SharedData.getInstance().toString());
+//        log.info("load 성공\n"+SharedData.getInstance().toString());
         //changeTest();
 
         Scanner sc = new Scanner(System.in);
@@ -29,14 +29,10 @@ public class KuBookLauncher {
 
         while (true) {
             System.out.print("현재 날짜를 입력해주세요 (ex. 20240101) : ");
-
             date=sc.nextLine();
             if (Validation.validateDate(date)) {
                 dates = FileManager.dateGenerator(date);
                 break;
-            }
-            else{
-                System.out.println();
             }
         }
 
@@ -64,8 +60,6 @@ public class KuBookLauncher {
                 }
                 sharedData.currentTime = new Date(date, time);
                 break;
-            }else{
-                System.out.println();
             }
         }
         while(true){
@@ -74,8 +68,6 @@ public class KuBookLauncher {
             ID = sc.nextLine();
             if(Validation.validateUserId(ID)){
                 break;
-            }else{
-                System.out.println();
             }
         }
 
@@ -106,7 +98,7 @@ public class KuBookLauncher {
                     System.exit(0);
                     break;
                 default:
-                    System.err.println("오류! 메뉴에 없는 입력입니다. 다시 입력해주세요.\n");
+                    System.out.println("오류! 메뉴에 없는 입력입니다. 다시 입력해주세요.\n");
                     break;
             }
         }
@@ -146,7 +138,7 @@ public class KuBookLauncher {
                 if(sharedData.penalizedUsers.get(Date.fromWithNoValidation(dates.get(0),null))!=null) {
                     for (int i = 0; i < sharedData.penalizedUsers.get(Date.fromWithNoValidation(dates.get(0), null)).size(); i++) {
                         if (sharedData.penalizedUsers.get(Date.fromWithNoValidation(dates.get(0), null)).get(i).getUserId().equals(ID) && Validation.selectedReservationDate == 0) {
-                            log.error("해당 날짜는 페널티에 의해 예약하실 수 없습니다.");
+                            System.out.println("해당 날짜는 페널티에 의해 예약하실 수 없습니다.");
                             continue label;
                         }
                     }
@@ -202,8 +194,6 @@ public class KuBookLauncher {
             nroom = sc.nextLine();
             if(Validation.validateReservationRoomNum(nroom, sharedData.kcubes.size())){
                 break;
-            }else{
-                System.out.println();
             }
         }
 
@@ -229,11 +219,9 @@ public class KuBookLauncher {
                         IDs.add(numID);
                         i++;
                     }else{
-                        log.error("이미 등록한 예약자의 학번입니다.");
-                        System.out.println();
+                        System.out.println("이미 등록한 예약자의 학번입니다.");
+
                     }
-                }else{
-                    System.out.println();
                 }
                 if(i == Integer.parseInt(npeople)) break;
             }
@@ -246,13 +234,11 @@ public class KuBookLauncher {
             /* 예약 불가능 예외처리 */
             if(Validation.validateReservationStartTime(nstart)){
                 if(checkarr[Integer.parseInt(nroom)-1][Integer.parseInt(nstart)-9].equals("   ■")){
-                    System.err.print("오류! 예약이 불가한 시간입니다.");
+                    System.out.print("오류! 예약이 불가한 시간입니다.");
                     System.out.print(" 다시 입력해주세요. (ex. 12) : ");
                 }else{
                     break;
                 }
-            }else{
-                System.out.println();
             }
         }
 
@@ -263,13 +249,10 @@ public class KuBookLauncher {
             nuse = sc.nextLine();
             if(Validation.validateReservationUseTime(nuse)){
                 if((Integer.parseInt(nstart)+Integer.parseInt(nuse))>=23){
-                    log.error("K CUBE 마감시간을 넘어갑니다");
-                    System.out.println();
+                    System.out.println("K CUBE 마감시간을 넘어갑니다");
                 }else{
                     break;
                 }
-            }else{
-                System.out.println();
             }
         }
         //sharedData에 예약 목록과 로그 추가
@@ -329,7 +312,9 @@ public class KuBookLauncher {
                 System.out.println("\n처음으로 돌아갑니다.\n");
                 break;
             }
-            else System.out.println("\n오류! 잘못된 입력입니다. B만 입력가능합니다.\n");
+                System.out.println("오류! 잘못된 입력입니다. B만 입력가능합니다.");
+
+
         }
     }
 
@@ -365,8 +350,6 @@ public class KuBookLauncher {
                 cancel = sc.nextLine();
                 if(Validation.validateCancelNum(cancel, cancellist.size())){
                     break;
-                }else{
-                    System.out.println();
                 }
             }
             Date canceldate = null;
