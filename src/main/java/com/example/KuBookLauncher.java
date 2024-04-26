@@ -144,10 +144,7 @@ public class KuBookLauncher {
                     }
                 }
                 break;
-            }else {
-                System.out.println();
             }
-
         }
 
 
@@ -203,8 +200,6 @@ public class KuBookLauncher {
             npeople = sc.nextLine();
             if(Validation.validateSelfExcludedTotMemberNumber(npeople, Integer.parseInt(sharedData.kcubes.get(Validation.selectedRoomNum-1).getMax())-1)) {
                 break;
-            }else{
-                System.out.println("");
             }
         }
         List<String> IDs = new ArrayList<>(); //학번 목록 저장
