@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.time.DateTimeException;
 import java.time.LocalDate;
+import java.time.Month;
 import java.time.format.DateTimeFormatter;
 
 @Slf4j
@@ -84,13 +85,22 @@ public class Validation {
                 log.error("날짜는 1900년 이상 2999년 이하여야 합니다.");
                 return false;
             }
+            //윤일인데, 윤일이 없는 해인지 체크
+            String month = date.substring(4,6);
+            String day = date.substring(6);
+            if (month.equals("02") && day.equals("29")) {
+                if (!isLeapYear(year)) {
+                    log.error("윤일이 없는 해입니다.");
+                    return false;
+                }
+            }
+
             if(year < sharedData.currentTime.getYear()){
                 log.error("현재 날짜보다 예약할 날짜가 이후여야 합니다");
                 return false;
             }else if(year > sharedData.currentTime.getYear()){
                 return true;
             }
-
             DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("MMdd");
             String monthDayString = localDate.format(formatter1);
 
@@ -107,6 +117,9 @@ public class Validation {
             return false;
         }
         return true;
+    }
+    private static boolean isLeapYear(int year) {
+        return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
     }
 
     public static boolean validateTime(String time) {
@@ -164,7 +177,7 @@ public class Validation {
             log.error("reservationDate is null");
             return false;
         }
-        
+
         try{
             int intReservationDate= Integer.parseInt(reservationDate);
             if(intReservationDate > max || intReservationDate < 0){
