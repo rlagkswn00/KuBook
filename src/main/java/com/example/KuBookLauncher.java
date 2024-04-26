@@ -142,7 +142,7 @@ public class KuBookLauncher {
             int totPrintedDate=8;
 
             if(Validation.validateReservationDate(reservedate, totPrintedDate)){
-                ;
+                break;
             }else{
                 System.out.println();
             }
@@ -154,9 +154,7 @@ public class KuBookLauncher {
                         continue label;
                     }
                 }
-                break;
             }
-            break;
         }
 
 

@@ -48,6 +48,11 @@ public class Validation {
     }
 
     public static boolean validateUseTime(String useTime) {
+        if (!useTime.matches("\\d+")) {
+            log.error("이용시간은 숫자로만 이루어져야 합니다.");
+            return false;
+        }
+        
         try {
             int time = Integer.parseInt(useTime);
             if(time < 1 || time > 3) {
@@ -73,10 +78,13 @@ public class Validation {
         }
 
         try {
+            int day=Integer.parseInt(date.substring(6,8));
             // 날짜 형식을 지정
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
             // 입력된 문자열을 LocalDate 객체로 파싱
             LocalDate localDate = LocalDate.parse(date, formatter);
+
+            boolean isTheSameYear=false;
 
             // 1900 이상, 2999 이하
             int year = localDate.getYear();
@@ -87,8 +95,20 @@ public class Validation {
             if(year < sharedData.currentTime.getYear()){
                 log.error("현재 날짜보다 예약할 날짜가 이후여야 합니다");
                 return false;
-            }else if(year > sharedData.currentTime.getYear()){
-                return true;
+            }else if(year==sharedData.currentTime.getYear()) isTheSameYear=true;
+
+
+            int[] daysInMonth = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+
+            if (localDate.isLeapYear()) {
+                daysInMonth[1] = 29;
+            }
+
+            int month=Integer.parseInt(localDate.toString().substring(5,7));
+
+            if (day < 1 || day > daysInMonth[month - 1]) {
+                log.error("없는 날짜를 입력하셨습니다");
+                return false;
             }
 
             DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("MMdd");
@@ -96,11 +116,11 @@ public class Validation {
 
             isTheSameDay=false;
 
-            if(Integer.parseInt(monthDayString) < sharedData.currentTime.getMontToDay()) {
+            if(isTheSameYear==true && Integer.parseInt(monthDayString) < sharedData.currentTime.getMontToDay()) {
                 log.error("현재 날짜보다 예약할 날짜가 이후여야 합니다");
                 return false;
             }else if(Integer.parseInt(monthDayString)==sharedData.currentTime.getMontToDay()){
-                isTheSameDay=true; // TODO : 어디에 쓰이는 변수인가요?
+                isTheSameDay=true;
             }
         } catch (DateTimeException e) {
             log.error("날짜형식은 yyyyMMdd여야 합니다.");
@@ -146,6 +166,11 @@ public class Validation {
             return false;
         }
 
+        if (!buildingNum.matches("\\d+")) {
+            log.error("건물 번호는 숫자로만 이루어져야 합니다.");
+            return false;
+        }
+
         try {
             int intBuildingNum=Integer.parseInt(buildingNum);
             if(intBuildingNum >totBuildingNum || intBuildingNum <= 0){
@@ -164,7 +189,12 @@ public class Validation {
             log.error("reservationDate is null");
             return false;
         }
-        
+
+        if (!reservationDate.matches("\\d+")) {
+            log.error("예약하실 날짜 번호는 숫자로만 이루어져야 합니다.");
+            return false;
+        }
+
         try{
             int intReservationDate= Integer.parseInt(reservationDate);
             if(intReservationDate > max || intReservationDate < 0){
@@ -182,6 +212,11 @@ public class Validation {
     public static boolean validateReservationRoomNum(String reservationRoomNum,int maxRoomNumInBuilding){
         if(reservationRoomNum==null){
             log.error("reservationRoomNum is null");
+            return false;
+        }
+
+        if (!reservationRoomNum.matches("\\d+")) {
+            log.error("예약하실 호실은 숫자로만 이루어져야 합니다.");
             return false;
         }
 
@@ -205,6 +240,11 @@ public class Validation {
             return false;
         }
 
+        if (!selfExcludedTotMemberNumber.matches("\\d+")) {
+            log.error("본인을 제외한 전체 예약 인원 수는 숫자로만 이루어져야 합니다.");
+            return false;
+        }
+
         try{
             int intSelfExcludedTotMemberNumber = Integer.parseInt(selfExcludedTotMemberNumber);
             if(intSelfExcludedTotMemberNumber > maxRoomCapacity || intSelfExcludedTotMemberNumber <=0){
@@ -221,6 +261,11 @@ public class Validation {
     public static boolean validateCancelNum(String cancelNum,int maxCancelNum){
         if(cancelNum==null){
             log.error("cancelNum is null");
+            return false;
+        }
+
+        if (!cancelNum.matches("\\d+")) {
+            log.error("취소 번호는 숫자로만 이루어져야 합니다.");
             return false;
         }
 
@@ -251,7 +296,12 @@ public class Validation {
             log.error("reservationStartTime is null");
             return false;
         }
-
+        
+        if (!reservationStartTime.matches("\\d+")) {
+            log.error("예약시작 시간은 숫자로만 이루어져야 합니다.");
+            return false;
+        }
+        
         try{
             int intReservationStartTime = Integer.parseInt(reservationStartTime);
             if(intReservationStartTime < 9 || intReservationStartTime > 21){
@@ -271,9 +321,14 @@ public class Validation {
             return false;
         }
 
+        if (!reservationUseTime.matches("\\d+")) {
+            log.error("이용 시간은 숫자로만 이루어져야 합니다.");
+            return false;
+        }
+
         try{
             int intReservationUseTime = Integer.parseInt(reservationUseTime);
-            if(intReservationUseTime < 0 || intReservationUseTime > 4){
+            if(intReservationUseTime <= 0 || intReservationUseTime >= 4){
                 log.error("입력하신 이용 시간이 올바르지 않습니다.");
                 return false;
             }
