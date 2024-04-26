@@ -150,8 +150,8 @@ public class KuBookLauncher {
                             continue label;
                         }
                     }
-                    break;
                 }
+                break;
             }else {
                 System.out.println();
             }
