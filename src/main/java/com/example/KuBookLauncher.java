@@ -399,7 +399,7 @@ public class KuBookLauncher {
                 } while(!Validation.validateSameDayCanceling(currentcancel));
             }
             else {
-                //log 현재 파일에 저장된 데이터로는 오류 발생...일단 주석 처리
+                //log 업데이트
                 int cancelusetime = Integer.parseInt(cancellist.get(Integer.parseInt(cancel)-1).get(canceldate).useTime); //취소되는 시간
                 for(int i=0; i<pIDs.size(); i++){
                     for(int j=0; j<sharedData.logs.get(canceldate).size(); j++){

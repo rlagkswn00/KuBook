@@ -50,8 +50,8 @@ public class Validation {
     public static boolean validateUseTime(String useTime) {
         try {
             int time = Integer.parseInt(useTime);
-            if(time < 1 || time > 3) {
-                printErrorMessage("이용시간은 1시간 이상 3시간 이하여야 합니다.");
+            if(time < 1) {
+                printErrorMessage("이용시간은 1시간 이상이여야 합니다.");
                 return false;
             }
         } catch (NumberFormatException e) {
