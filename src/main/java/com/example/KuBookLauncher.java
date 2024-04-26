@@ -362,10 +362,10 @@ public class KuBookLauncher {
                     if(currentcancel.equals("Y")){
                         //sharedData에 예약자, 동반 예약자 당일 예약 취소 처리
                         for(String pID:pIDs){
-                            /*log 현재 파일에 저장된 데이터로는 오류 발생...일단 주석 처리
-                            sharedData.penalizedUsers.get(canceldate).removeIf(n->n.userId.contains(pID));
-                            */
+                            //log, 예약목록 삭제
+                            sharedData.logs.get(canceldate).removeIf(n->n.userId.contains(pID));
                             sharedData.reservationList.get(canceldate).removeIf(n->n.userIds.contains(pID));
+
                             //패널티 학번들 추가
                             PenaltyUser pu = (new PenaltyUser(pID));
                             sharedData.penalizedUsers.get(canceldate).add(pu);
@@ -400,7 +400,7 @@ public class KuBookLauncher {
             }
             else {
                 //log 현재 파일에 저장된 데이터로는 오류 발생...일단 주석 처리
-                /*int cancelusetime = Integer.parseInt(cancellist.get(Integer.parseInt(cancel)-1).get(canceldate).useTime); //취소되는 시간
+                int cancelusetime = Integer.parseInt(cancellist.get(Integer.parseInt(cancel)-1).get(canceldate).useTime); //취소되는 시간
                 for(int i=0; i<pIDs.size(); i++){
                     for(int j=0; j<sharedData.logs.get(canceldate).size(); j++){
                         if(sharedData.logs.get(canceldate).get(j).userId.equals(pIDs.get(i))) {
@@ -411,7 +411,7 @@ public class KuBookLauncher {
                     }
                 }
                 sharedData.logs.get(canceldate).removeIf(n->n.useTime.equals("0"));
-                */
+
 
                 //sharedData에 취소 처리
                 for (int i = 0; i < pfinalcanlist.size(); i++) {
