@@ -373,6 +373,9 @@ public class KuBookLauncher {
 
                             //패널티 학번들 추가
                             PenaltyUser pu = (new PenaltyUser(pID));
+                            if(sharedData.penalizedUsers.getOrDefault(canceldate, null) == null){
+                                sharedData.penalizedUsers.put(canceldate, new ArrayList<>());
+                            }
                             sharedData.penalizedUsers.get(canceldate).add(pu);
                         }
 
