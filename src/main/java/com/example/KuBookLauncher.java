@@ -134,16 +134,18 @@ public class KuBookLauncher {
             int totPrintedDate=8;
 
             if(Validation.validateReservationDate(reservedate, totPrintedDate)){
-                /*패널티 대상자 예외처리 필요*/
-                if(sharedData.penalizedUsers.get(Date.fromWithNoValidation(dates.get(0),null))!=null) {
-                    for (int i = 0; i < sharedData.penalizedUsers.get(Date.fromWithNoValidation(dates.get(0), null)).size(); i++) {
-                        if (sharedData.penalizedUsers.get(Date.fromWithNoValidation(dates.get(0), null)).get(i).getUserId().equals(ID) && Validation.selectedReservationDate == 0) {
-                            System.out.println("해당 날짜는 페널티에 의해 예약하실 수 없습니다.");
-                            continue label;
-                        }
+                break;
+            }else{
+                System.out.println();
+            }
+            /*패널티 대상자 예외처리 필요*/
+            if(sharedData.penalizedUsers.get(Date.fromWithNoValidation(dates.get(0),null))!=null) {
+                for (int i = 0; i < sharedData.penalizedUsers.get(Date.fromWithNoValidation(dates.get(0), null)).size(); i++) {
+                    if (sharedData.penalizedUsers.get(Date.fromWithNoValidation(dates.get(0), null)).get(i).getUserId().equals(ID) && Validation.selectedReservationDate == 0) {
+                        log.error("해당 날짜는 페널티에 의해 예약하실 수 없습니다.");
+                        continue label;
                     }
                 }
-                break;
             }
         }
 
