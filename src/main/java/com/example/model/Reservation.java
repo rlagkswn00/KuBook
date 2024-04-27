@@ -30,7 +30,7 @@ public class Reservation implements Model{
     public static Reservation fromFile(String[] strings) {
         List<String> userIds = new ArrayList<>();
         int numOfPeople = Integer.parseInt(strings[4]);
-        for (int i = 0; i < numOfPeople; i++) {
+        for (int i = 0; i <= numOfPeople; i++) {
             userIds.add(strings[i + 5]); // 5번째 부터 학번 인덱스 시작
         }
 

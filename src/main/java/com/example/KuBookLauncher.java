@@ -6,7 +6,6 @@ import com.example.model.KLog;
 import com.example.model.PenaltyUser;
 import com.example.model.Reservation;
 import com.example.utils.Validation;
-import com.sun.source.tree.WhileLoopTree;
 import lombok.extern.slf4j.Slf4j;
 import java.io.IOException;
 import java.util.*;
@@ -320,7 +319,7 @@ public class KuBookLauncher {
                             System.out.print(reslist.get(j).name+", "+reslist.get(j).room+"호실, "
                                     + dates.get(i)+", "+reslist.get(j).startTime+"시, "+reslist.get(j).useTime+"h, ");
                             List<String> others = reslist.get(j).userIds;
-                            ListtoString(others, ID);
+                            ListToString(others, ID);
                         }
                     }
                     reserveflag = false;
@@ -355,7 +354,7 @@ public class KuBookLauncher {
                         System.out.print(reservenum+". "+reslist.get(j).name+", "+reslist.get(j).room+"호실, "
                                 + dates.get(i)+", "+reslist.get(j).startTime+"시, "+reslist.get(j).useTime+"h, ");
                         List<String> others = reslist.get(j).userIds;
-                        ListtoString(others, ID);
+                        ListToString(others, ID);
                         Map<Date, Reservation> map = new HashMap<>();
                         map.put(new Date(dates.get(i)), reslist.get(j));
                         cancellist.add(map);
@@ -417,7 +416,7 @@ public class KuBookLauncher {
                                 System.out.print(+reservenum+". "+cancellist.get(i).get(prdate).name+", "+cancellist.get(i).get(prdate).room+"호실, "
                                         + prdate.date+", "+cancellist.get(i).get(prdate).startTime+"시, "+cancellist.get(i).get(prdate).useTime+"h, ");
                                 List<String> others = cancellist.get(i).get(prdate).userIds;
-                                ListtoString(others, ID);
+                                ListToString(others, ID);
                                 reservenum++;
                             }
                         }
@@ -467,7 +466,7 @@ public class KuBookLauncher {
                         System.out.print(+reservenum+". "+cancellist.get(i).get(rdate).name+", "+cancellist.get(i).get(rdate).room+"호실, "
                                 + rdate.date+", "+cancellist.get(i).get(rdate).startTime+"시, "+cancellist.get(i).get(rdate).useTime+"h, ");
                         List<String> others = cancellist.get(i).get(rdate).userIds;
-                        ListtoString(others, ID);
+                        ListToString(others, ID);
                         reservenum++;
                     }
                 }
@@ -485,7 +484,7 @@ public class KuBookLauncher {
     }
 
     //학번 출력 방식
-    public static void ListtoString(List<String> s, String ID){
+    public static void ListToString(List<String> s, String ID){
         System.out.print("(");
         boolean flag = true;
         for(int i=0; i<s.size(); i++){
