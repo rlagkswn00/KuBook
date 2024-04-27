@@ -1,6 +1,7 @@
 package com.example.utils;
 
 import com.example.SharedData;
+import com.example.model.Date;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
@@ -36,6 +37,15 @@ public class Validation {
         int month = sharedData.currentTime.getMonth();
         int diff = sharedData.currentTime.getYear() - year;
 
+        Date currentTime = sharedData.getCurrentTime();
+
+        String date = currentTime.date;
+        int dateYear = Integer.parseInt(date.substring(0, 4));
+        int idYear = Integer.parseInt(userId.substring(0, 4));
+        if (dateYear < idYear) {
+            printErrorMessage("아직 입학하지 않은 학번은 입력할 수 없습니다.");
+            return false;
+        }
         if(diff > 15) {
             printErrorMessage("15년 이내 입학 학생들만 이용 가능합니다.");
             return false;
