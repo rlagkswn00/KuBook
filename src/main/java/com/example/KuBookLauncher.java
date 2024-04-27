@@ -244,13 +244,22 @@ public class KuBookLauncher {
         String nuse;
         while(true) {
             System.out.print("이용할 시간을 입력하세요 (1~3시간만 가능) :  ");
-
             nuse = sc.nextLine();
             if(Validation.validateReservationUseTime(nuse)){
                 if((Integer.parseInt(nstart)+Integer.parseInt(nuse))>=23){
                     System.out.println("K CUBE 마감시간을 넘어갑니다");
                 }else{
-                    break;
+                    boolean useflag = true;
+                    for(int i=1; i<Integer.parseInt(nuse); i++){
+                        if(checkarr[Integer.parseInt(nroom)-1][Integer.parseInt(nstart)-9+i].equals("   ■")){
+                            System.out.println("오류! 예약이 불가한 시간이 포함되어있습니다. 다시 선택해주세요.");
+                            useflag = false;
+                            break;
+                        }
+                    }
+                    if(useflag){
+                        break;
+                    }
                 }
             }
         }
