@@ -14,6 +14,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import static com.example.fileio.FilePath.CURRENT_TIME_TXT;
 import static com.example.fileio.FilePath.DATA_DIR;
@@ -105,6 +106,7 @@ public class SaveManager {
      * 현재 날짜에 패널티가 적용된 유저 목록을 파일에 저장
      */
     public void savePenalty() throws IOException {
+        System.out.println(sharedData);
         File etcDir = new File(ETC_DIR);
         Validation.existDir(etcDir);
         // 패널티 파일 찾아서 삭제
@@ -112,12 +114,19 @@ public class SaveManager {
                 .filter(file -> file.getName().startsWith("p"))
                 .findFirst().ifPresent(File::delete);
 
-        List<PenaltyUser> penalizedUsers = sharedData.penalizedUsers.get(curTime);
+        List<PenaltyUser> penalizedUsers = null;
+        Set<Date> dates = sharedData.penalizedUsers.keySet();
+        for (Date date : dates) {
+            String dateVal = date.getDate();
+            if (dateVal.equals(curTime.getDate())) {
+                penalizedUsers = sharedData.penalizedUsers.get(date);
+            }
+        }
         if (penalizedUsers == null) {
             return;
         }
-
         File file = new File(ETC_DIR + "p" + curTime.date + ".txt");
+        Validation.existFile(file);
         writeModelsToFile(file, penalizedUsers);
     }
 
