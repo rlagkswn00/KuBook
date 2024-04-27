@@ -11,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.IOException;
 import java.util.*;
 
+import static com.example.utils.Validation.printErrorMessage;
+
 @Slf4j
 public class KuBookLauncher {
     public static SharedData sharedData = SharedData.getInstance();
@@ -142,7 +144,8 @@ public class KuBookLauncher {
             if(sharedData.penalizedUsers.get(Date.fromWithNoValidation(dates.get(0),null))!=null) {
                 for (int i = 0; i < sharedData.penalizedUsers.get(Date.fromWithNoValidation(dates.get(0), null)).size(); i++) {
                     if (sharedData.penalizedUsers.get(Date.fromWithNoValidation(dates.get(0), null)).get(i).getUserId().equals(ID) && Validation.selectedReservationDate == 0) {
-                        log.error("해당 날짜는 페널티에 의해 예약하실 수 없습니다.");
+                        printErrorMessage("해당 날짜는 페널티에 의해 예약하실 수 없습니다.");
+                        System.out.println();
                         continue label;
                     }
                 }

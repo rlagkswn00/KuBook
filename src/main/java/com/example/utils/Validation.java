@@ -59,7 +59,7 @@ public class Validation {
 
     public static boolean validateUseTime(String useTime) {
         if (!useTime.matches("\\d+")) {
-            log.error("이용시간은 숫자로만 이루어져야 합니다.");
+            printErrorMessage("이용시간은 숫자로만 이루어져야 합니다.");
             return false;
         }
         
@@ -76,7 +76,7 @@ public class Validation {
         return true;
     }
 
-    private static void printErrorMessage(String line) {
+    public static void printErrorMessage(String line) {
         System.out.println(line);
         System.out.println();
     }
@@ -107,9 +107,9 @@ public class Validation {
                 return false;
             }
             //윤일인데, 윤일이 없는 해인지 체크
-            String month = date.substring(4,6);
-            String day = date.substring(6);
-            if (month.equals("02") && day.equals("29")) {
+            String monthStr = date.substring(4,6);
+            String dayStr = date.substring(6);
+            if (monthStr.equals("02") && dayStr.equals("29")) {
                 if (!isLeapYear(year)) {
                     printErrorMessage("윤일이 없는 해입니다.");
                     return false;
@@ -131,7 +131,7 @@ public class Validation {
             int month=Integer.parseInt(localDate.toString().substring(5,7));
 
             if (day < 1 || day > daysInMonth[month - 1]) {
-                log.error("없는 날짜를 입력하셨습니다");
+                printErrorMessage("없는 날짜를 입력하셨습니다");
                 return false;
             }
             DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("MMdd");
@@ -193,7 +193,7 @@ public class Validation {
         }
 
         if (!buildingNum.matches("\\d+")) {
-            log.error("건물 번호는 숫자로만 이루어져야 합니다.");
+            printErrorMessage("건물 번호는 숫자로만 이루어져야 합니다.");
             return false;
         }
 
@@ -217,7 +217,7 @@ public class Validation {
         }
 
         if (!reservationDate.matches("\\d+")) {
-            log.error("예약하실 날짜 번호는 숫자로만 이루어져야 합니다.");
+            printErrorMessage("예약하실 날짜 번호는 숫자로만 이루어져야 합니다.");
             return false;
         }
 
@@ -242,7 +242,7 @@ public class Validation {
         }
 
         if (!reservationRoomNum.matches("\\d+")) {
-            log.error("예약하실 호실은 숫자로만 이루어져야 합니다.");
+            printErrorMessage("예약하실 호실은 숫자로만 이루어져야 합니다.");
             return false;
         }
 
@@ -267,7 +267,7 @@ public class Validation {
         }
 
         if (!selfExcludedTotMemberNumber.matches("\\d+")) {
-            log.error("본인을 제외한 전체 예약 인원 수는 숫자로만 이루어져야 합니다.");
+            printErrorMessage("본인을 제외한 전체 예약 인원 수는 숫자로만 이루어져야 합니다.");
             return false;
         }
 
@@ -291,7 +291,7 @@ public class Validation {
         }
 
         if (!cancelNum.matches("\\d+")) {
-            log.error("취소 번호는 숫자로만 이루어져야 합니다.");
+            printErrorMessage("취소 번호는 숫자로만 이루어져야 합니다.");
             return false;
         }
 
@@ -324,7 +324,7 @@ public class Validation {
         }
         
         if (!reservationStartTime.matches("\\d+")) {
-            log.error("예약시작 시간은 숫자로만 이루어져야 합니다.");
+            printErrorMessage("예약시작 시간은 숫자로만 이루어져야 합니다.");
             return false;
         }
         
@@ -348,7 +348,7 @@ public class Validation {
         }
 
         if (!reservationUseTime.matches("\\d+")) {
-            log.error("이용 시간은 숫자로만 이루어져야 합니다.");
+            printErrorMessage("이용 시간은 숫자로만 이루어져야 합니다.");
             return false;
         }
 
