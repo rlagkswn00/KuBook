@@ -31,7 +31,7 @@ public class KuBookLauncher {
         while (true) {
             System.out.print("현재 날짜를 입력해주세요 (ex. 20240101) : ");
             date=sc.nextLine();
-            if (Validation.validateDate(date)) {
+            if (sharedData.currentTime == null || Validation.validateDate(date)) {
                 dates = FileManager.dateGenerator(date);
                 break;
             }
@@ -43,7 +43,7 @@ public class KuBookLauncher {
             time = sc.nextLine();
             if(Validation.validateTime(time)){
                  /*현재 시간 예외처리에 따른 sharedData penalty, log, reservation update 처리*/
-                if(Integer.parseInt(sharedData.currentTime.date)<Integer.parseInt(date)){  //currentTime 이후 날짜인 경우
+                if(sharedData.currentTime == null || Integer.parseInt(sharedData.currentTime.date) < Integer.parseInt(date)){  //currentTime 이후 날짜인 경우
                     List<PenaltyUser> penaltyUsers = new ArrayList<>();
                     sharedData.penalizedUsers.clear();
                     sharedData.penalizedUsers.put(new Date(date), penaltyUsers); //당일 패널티 목록 새로 생성
