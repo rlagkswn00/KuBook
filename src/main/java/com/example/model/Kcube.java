@@ -30,7 +30,7 @@ public class Kcube {
 
     public static Kcube fromFile(String[] strings){
         if(strings.length != 3){
-            System.err.println("파일명 혹은 파일형식에 문제가 있습니다 ! (케이큐브)");
+            System.out.println("파일명 혹은 파일형식에 문제가 있습니다 ! (케이큐브)");
             System.exit(1);
         }
         return from(strings[0], strings[1], strings[2]);

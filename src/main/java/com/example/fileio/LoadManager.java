@@ -50,7 +50,7 @@ public class LoadManager {
         File[] files = dir.listFiles();
         if (files == null || files.length == 0) return;
         if (!validate8Days(files)) {
-            System.err.println("파일명 혹은 파일형식에 문제가 있습니다 ! (예약정보)");
+            System.out.println("파일명 혹은 파일형식에 문제가 있습니다 ! (예약정보)");
             System.exit(1);
         }
         for (File file : files) {
@@ -61,7 +61,7 @@ public class LoadManager {
             while ((line = br.readLine()) != null) {
                 String[] splitedLine = line.split(",");
                 if (splitedLine.length < 6) {
-                    System.err.println("파일명 혹은 파일형식에 문제가 있습니다 ! (예약정보)");
+                    System.out.println("파일명 혹은 파일형식에 문제가 있습니다 ! (예약정보)");
                     System.exit(1);
                 }
                 Reservation reservation = Reservation.fromFile(splitedLine);
@@ -81,7 +81,7 @@ public class LoadManager {
         if (files == null || files.length == 0) return;
 
         if (!validate8Days(files)) {
-            System.err.println("파일명 혹은 파일형식에 문제가 있습니다 ! (예약로그)");
+            System.out.println("파일명 혹은 파일형식에 문제가 있습니다 ! (예약로그)");
             System.exit(1);
         }
         for (File file : files) {

@@ -22,7 +22,7 @@ public class FileManager {
      * 프로그램 시작 시 호출되며, 파일의 데이터들을 프로그램 내에서 쓰일 객체로 변환
      */
     private void load() throws IOException {
-        log.info("load 진입");
+//        log.info("load 진입");
         loadManager.loadCurrentTime();
         loadManager.loadReservation();
         loadManager.loadLog();
@@ -34,13 +34,13 @@ public class FileManager {
      * 프로그램 종료 시 호출되며, 런타임 동안 변화한 데이터를 파일에 업데이트하는 역할
      */
     public void save() throws IOException {
-        log.info("save 진입");
+//        log.info("save 진입");
         SaveManager saveManager = new SaveManager(sharedData.currentTime, dateGenerator(sharedData.currentTime.date));
         saveManager.saveCurrentTime();
         saveManager.savePenalty();
         saveManager.saveLog();
         saveManager.saveReservation();
-        log.info("save 성공");
+//        log.info("save 성공");
     }
 
     /**
