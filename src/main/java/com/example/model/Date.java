@@ -29,6 +29,12 @@ public class Date {
     public int getMontToDay(){
         return Integer.parseInt(date.substring(4,8));
     }
+    public int getHour(){
+        return Integer.parseInt(time.substring(0,2));
+    }
+    public int getMinute(){
+        return Integer.parseInt(time.substring(2,4));
+    }
 
     public static Date from(String date, String time) {
         Validation.validateDate(date);

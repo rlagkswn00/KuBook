@@ -317,9 +317,9 @@ public class Validation {
         return false;
     }
 
-    public static boolean validateReservationStartTime(String reservationStartTime){
-        if(reservationStartTime==null){
-            printErrorMessage("reservationStartTime is null");
+    public static boolean validateReservationStartTime(String reservedate, String reservationStartTime){
+        if(reservationStartTime == null || reservedate == null){
+            printErrorMessage("prarameter is null");
             return false;
         }
         
@@ -333,6 +333,17 @@ public class Validation {
             if(intReservationStartTime < 9 || intReservationStartTime > 21){
                 printErrorMessage("입력하신 예약시작 시간이 올바르지 않습니다.");
                 return false;
+            }
+            boolean isCurDate = Integer.parseInt(reservedate) == 0;
+            if(isCurDate){
+                if(sharedData.currentTime.getHour() > intReservationStartTime) {
+                    printErrorMessage("현재시간 이전의 시간은 예약이 불가합니다.");
+                    return false;
+                }else if(sharedData.currentTime.getHour() == intReservationStartTime
+                && sharedData.currentTime.getMinute() !=0){
+                    printErrorMessage("현재시간 이전의 시간은 예약이 불가합니다.");
+                    return false;
+                }
             }
         }catch(NumberFormatException e){
             printErrorMessage("예약시작 시간은 숫자로 이루어져야 합니다.");

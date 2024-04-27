@@ -229,7 +229,7 @@ public class KuBookLauncher {
             System.out.print("예약 시작 시간을 입력하세요 (ex. 12) :  ");
             nstart = sc.nextLine();
             /* 예약 불가능 예외처리 */
-            if(Validation.validateReservationStartTime(nstart)){
+            if(Validation.validateReservationStartTime(reservedate, nstart)){
                 if(checkarr[Integer.parseInt(nroom)-1][Integer.parseInt(nstart)-9].equals("   ■")){
                     System.out.println("오류! 예약이 불가한 시간입니다.");
                 }else{
