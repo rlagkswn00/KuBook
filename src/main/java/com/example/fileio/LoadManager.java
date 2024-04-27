@@ -47,9 +47,9 @@ public class LoadManager {
 
     public void loadReservation() throws IOException {
         File dir = new File(RESERVATION_DIR);
-        File[] files = dir.listFiles();
-        if (files == null || files.length == 0) return;
-        if (!validate8Days(files)) {
+        List<File> files =  new ArrayList<>(Arrays.asList(dir.listFiles()));
+        if (files == null || files.size() == 0) return;
+        if (!validate8Days(files, RESERVATION_DIR)) {
             System.out.println("파일명 혹은 파일형식에 문제가 있습니다 ! (예약정보)");
             System.exit(1);
         }
@@ -77,10 +77,10 @@ public class LoadManager {
 
     public void loadLog() throws IOException {
         File dir = new File(LOG_DIR);
-        File[] files = dir.listFiles();
-        if (files == null || files.length == 0) return;
+        List<File> files = new ArrayList<>(Arrays.asList(dir.listFiles()));
+        if (files == null || files.size() == 0) return;
 
-        if (!validate8Days(files)) {
+        if (!validate8Days(files, LOG_DIR)) {
             System.out.println("파일명 혹은 파일형식에 문제가 있습니다 ! (예약로그)");
             System.exit(1);
         }
@@ -159,19 +159,64 @@ public class LoadManager {
         return dateStr;
     }
 
-    private boolean validate8Days(File[] files) {
-        if (files.length != 8) {
-            return false;
+    private boolean validate8Days(List<File> files, String path) {
+        Collections.sort(files, (f1, f2) -> f1.getName().compareToIgnoreCase(f2.getName()));
+        if (files.size() != 8) {
+            if(deleteImpossibleFile(files)){
+                if(!addPossibleFile(files, path))
+                    return false;
+            }
         }
-        Arrays.sort(files, Comparator.comparing(String::valueOf));
-        File file = files[0];
+        Collections.sort(files, (f1, f2) -> f1.getName().compareToIgnoreCase(f2.getName()));
+        File file = files.get(0);
         String fileName = parseFileName(file, 0);
         List<String> dates = FileManager.dateGenerator(fileName);
         for (int i = 0; i < 8; i++) {
-            if (!parseFileName(files[i], 0).equals(dates.get(i))) {
+            if (!parseFileName(files.get(i), 0).equals(dates.get(i))) {
                 return false;
             }
         }
+        return true;
+    }
+
+    private boolean deleteImpossibleFile(List<File> files) {
+        if(sharedData.currentTime == null)
+            return true;
+        List<String> dates = FileManager.dateGenerator(sharedData.currentTime.date);
+        Iterator<File> iterator = files.iterator();
+        while (iterator.hasNext()) {
+            File file = iterator.next();
+            boolean isImpossible = true;
+            for (String date : dates) {
+                if(date.equals(parseFileName(file, 0))) {
+                    isImpossible = false;
+                }
+            }
+            if(isImpossible) {
+                file.delete();
+                iterator.remove();
+            }
+        }
+        return true;
+    }
+    private boolean addPossibleFile(List<File> files, String path) {
+        if(sharedData.currentTime == null)
+            return true;
+        List<String> dates = FileManager.dateGenerator(sharedData.currentTime.date);
+
+        List<File> newFiles = new ArrayList<>(); // 새로 추가할 파일들을 저장할 임시 리스트
+        for(String date : dates) {
+            boolean isExist = false;
+            for (File file : files) {
+                if(date.equals(parseFileName(file, 0))) {
+                    isExist = true;
+                }
+            }
+            if(!isExist) {
+                newFiles.add(new File(path + date + ".txt"));
+            }
+        }
+        files.addAll(newFiles);
         return true;
     }
 
