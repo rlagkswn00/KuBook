@@ -145,6 +145,16 @@ public class KuBookLauncher {
                         }
                     }
                 }
+                if(sharedData.logs.get(new Date(dates.get(Integer.parseInt(reservedate)),null))!=null) {
+                    for (int i = 0; i < sharedData.logs.get(new Date(dates.get(Integer.parseInt(reservedate)),null)).size(); i++) {
+                        if (sharedData.logs.get(new Date(dates.get(Integer.parseInt(reservedate)),null)).get(i).userId.equals(ID)) {
+                            if (Integer.parseInt(sharedData.logs.get(new Date(dates.get(Integer.parseInt(reservedate)),null)).get(i).useTime) >= 3) {
+                                System.out.println("해당 날짜의 누적 이용시간은 3시간이므로 예약하실 수 없습니다.");
+                                continue label;
+                            }
+                        }
+                    }
+                }
                 break;
             }
         }
@@ -239,7 +249,7 @@ public class KuBookLauncher {
         }
 
         String nuse;
-        while(true) {
+        label:while(true) {
             System.out.print("이용할 시간을 입력하세요 (1~3시간만 가능) :  ");
             nuse = sc.nextLine();
             if(Validation.validateReservationUseTime(nuse)){
@@ -255,6 +265,16 @@ public class KuBookLauncher {
                         }
                     }
                     if(useflag){
+                        if(!sharedData.logs.get(checkreserve).isEmpty()) {
+                            for (int i = 0; i < sharedData.logs.get(checkreserve).size(); i++) {
+                                if (sharedData.logs.get(checkreserve).get(i).userId.equals(ID)) {
+                                    if (Integer.parseInt(sharedData.logs.get(checkreserve).get(i).useTime) + Integer.parseInt(nuse) > 3) {
+                                        System.out.println("예약하려는 날짜의 누적 이용시간은 최대 3시간까지 가능합니다. 다시 선택해주세요.");
+                                        continue label;
+                                    }
+                                }
+                            }
+                        }
                         break;
                     }
                 }
