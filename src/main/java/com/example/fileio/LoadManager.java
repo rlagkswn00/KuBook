@@ -47,6 +47,10 @@ public class LoadManager {
 
     public void loadReservation() throws IOException {
         File dir = new File(RESERVATION_DIR);
+        if (!dir.exists()) {
+            dir.mkdirs();
+            return;// 디렉토리 생성 시도
+        }
         List<File> files =  new ArrayList<>(Arrays.asList(dir.listFiles()));
         if (files == null || files.size() == 0) return;
         if (!validate8Days(files, RESERVATION_DIR)) {
@@ -77,6 +81,10 @@ public class LoadManager {
 
     public void loadLog() throws IOException {
         File dir = new File(LOG_DIR);
+        if (!dir.exists()) {
+            dir.mkdirs();
+            return;// 디렉토리 생성 시도
+        }
         List<File> files = new ArrayList<>(Arrays.asList(dir.listFiles()));
         if (files == null || files.size() == 0) return;
 
