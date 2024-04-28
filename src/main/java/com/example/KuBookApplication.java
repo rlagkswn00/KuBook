@@ -33,6 +33,19 @@ public class KuBookApplication {
             date=sc.nextLine();
             if (sharedData.currentTime == null || Validation.validateDate(date)) {
                 dates = FileManager.dateGenerator(date);
+                if(sharedData.reservationList.isEmpty()){
+                    for(String d : dates){
+                        sharedData.reservationList.put(new Date(d), new ArrayList<>());
+                    }
+                }
+                if(sharedData.logs.isEmpty()){
+                    for(String d : dates){
+                        sharedData.logs.put(new Date(d), new ArrayList<>());
+                    }
+                }
+                if(sharedData.penalizedUsers.isEmpty()){
+                    sharedData.penalizedUsers.put(new Date(date),new ArrayList<>());
+                }
                 break;
             }
         }
