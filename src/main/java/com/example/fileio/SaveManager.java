@@ -106,7 +106,6 @@ public class SaveManager {
      * 현재 날짜에 패널티가 적용된 유저 목록을 파일에 저장
      */
     public void savePenalty() throws IOException {
-        System.out.println(sharedData);
         File etcDir = new File(ETC_DIR);
         Validation.existDir(etcDir);
         // 패널티 파일 찾아서 삭제
