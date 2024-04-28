@@ -225,29 +225,31 @@ public class KuBookLauncher {
                     if(IDs.contains(numID)){
                         System.out.println("이미 등록한 예약자의 학번입니다.");
                     }
-                    else if(checkreserve.date.equals(sharedData.currentTime.date) && sharedData.penalizedUsers.get(checkreserve) != null){
-                        for(int j=0; j<sharedData.penalizedUsers.get(checkreserve).size(); j++) {
-                            if(sharedData.penalizedUsers.get(checkreserve).get(j).userId.equals(numID)){
-                                System.out.println("패널티가 있는 예약자의 학번입니다.");
-                                continue label;
+                    else {
+                        if(checkreserve.date.equals(sharedData.currentTime.date) && sharedData.penalizedUsers.get(checkreserve) != null){
+                            for(int j=0; j<sharedData.penalizedUsers.get(checkreserve).size(); j++) {
+                                if(sharedData.penalizedUsers.get(checkreserve).get(j).userId.equals(numID)){
+                                    System.out.println("패널티가 있는 예약자의 학번입니다.");
+                                    continue label;
+                                }
                             }
+                            IDs.add(numID);
+                            i++;
                         }
-                        IDs.add(numID);
-                        i++;
-                    }
-                    else if(!IDs.contains(numID)) {
-                        if(sharedData.logs.get(checkreserve)!=null) {
-                            for (int j = 0;j < sharedData.logs.get(checkreserve).size(); j++) {
-                                if (sharedData.logs.get(checkreserve).get(j).userId.equals(numID)) {
-                                    if (Integer.parseInt(sharedData.logs.get(checkreserve).get(j).useTime) >= 3) {
-                                        System.out.println("동반 예약자의 누적 이용시간은 3시간이므로 예약하실 수 없습니다.");
-                                        continue label;
+                        else {
+                            if (sharedData.logs.get(checkreserve) != null) {
+                                for (int j = 0; j < sharedData.logs.get(checkreserve).size(); j++) {
+                                    if (sharedData.logs.get(checkreserve).get(j).userId.equals(numID)) {
+                                        if (Integer.parseInt(sharedData.logs.get(checkreserve).get(j).useTime) >= 3) {
+                                            System.out.println("동반 예약자의 누적 이용시간은 3시간이므로 예약하실 수 없습니다.");
+                                            continue label;
+                                        }
                                     }
                                 }
                             }
+                            IDs.add(numID);
+                            i++;
                         }
-                        IDs.add(numID);
-                        i++;
                     }
                 }
                 if(i == Integer.parseInt(npeople)) break;
