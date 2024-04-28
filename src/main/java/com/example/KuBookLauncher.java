@@ -305,7 +305,7 @@ public class KuBookLauncher {
             }
         }
         //sharedData에 예약 목록과 로그 추가
-        Reservation nreserve = Reservation.from("공학관", nroom, nstart, nuse, npeople, IDs);
+        Reservation nreserve = Reservation.from("공학관", nroom, nstart, nuse, Integer.toString(Integer.parseInt(npeople)+1), IDs);
         sharedData.reservationList.get(checkreserve).add(nreserve);
         boolean logflag = true;
         for(int i=0; i<IDs.size(); i++){
