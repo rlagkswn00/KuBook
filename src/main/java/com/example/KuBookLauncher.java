@@ -63,6 +63,7 @@ public class KuBookLauncher {
                 break;
             }
         }
+
         while(true){
             System.out.print("학번을 입력해주세요 (ex. 202012345) : ");
 
@@ -216,15 +217,26 @@ public class KuBookLauncher {
         List<String> IDs = new ArrayList<>(); //학번 목록 저장
         IDs.add(ID);
         for(int i=0; i<Integer.parseInt(npeople);){
-            while (true) {
+            label:while (true) {
                 System.out.print(i + 1 + "번째 동반 예약자의 학번을 입력하세요 (ex. 202011111) : ");
                 String numID = sc.nextLine();
 
                 if(Validation.validateUserId(numID)) {
                     if(!IDs.contains(numID)) {
+                        if(sharedData.logs.get(checkreserve)!=null) {
+                            for (int j = 0;j < sharedData.logs.get(checkreserve).size(); j++) {
+                                if (sharedData.logs.get(checkreserve).get(j).userId.equals(numID)) {
+                                    if (Integer.parseInt(sharedData.logs.get(checkreserve).get(j).useTime) >= 3) {
+                                        System.out.println("동반 예약자의 누적 이용시간은 3시간이므로 예약하실 수 없습니다.");
+                                        continue label;
+                                    }
+                                }
+                            }
+                        }
                         IDs.add(numID);
                         i++;
-                    }else{
+                    }
+                    else{
                         System.out.println("이미 등록한 예약자의 학번입니다.");
 
                     }
@@ -266,10 +278,12 @@ public class KuBookLauncher {
                     if(useflag){
                         if(!sharedData.logs.get(checkreserve).isEmpty()) {
                             for (int i = 0; i < sharedData.logs.get(checkreserve).size(); i++) {
-                                if (sharedData.logs.get(checkreserve).get(i).userId.equals(ID)) {
-                                    if (Integer.parseInt(sharedData.logs.get(checkreserve).get(i).useTime) + Integer.parseInt(nuse) > 3) {
-                                        System.out.println("예약하려는 날짜의 누적 이용시간은 최대 3시간까지 가능합니다. 다시 선택해주세요.");
-                                        continue label;
+                                for(int j=0; j<IDs.size(); j++) {
+                                    if (sharedData.logs.get(checkreserve).get(i).userId.equals(IDs.get(j))) {
+                                        if (Integer.parseInt(sharedData.logs.get(checkreserve).get(i).useTime) + Integer.parseInt(nuse) > 3) {
+                                            System.out.println("예약하려는 날짜의 누적 이용시간은 최대 3시간까지 가능합니다. 다시 선택해주세요.");
+                                            continue label;
+                                        }
                                     }
                                 }
                             }
