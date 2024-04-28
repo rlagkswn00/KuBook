@@ -222,7 +222,17 @@ public class KuBookLauncher {
                 String numID = sc.nextLine();
 
                 if(Validation.validateUserId(numID)) {
-                    if(!IDs.contains(numID)) {
+                    if(checkreserve.date.equals(sharedData.currentTime.date) && sharedData.penalizedUsers.get(checkreserve) != null){
+                        for(int j=0; j<sharedData.penalizedUsers.get(checkreserve).size(); j++) {
+                            if(sharedData.penalizedUsers.get(checkreserve).get(j).userId.equals(numID)){
+                                System.out.println("패널티가 있는 예약자의 학번입니다.");
+                                continue label;
+                            }
+                        }
+                        IDs.add(numID);
+                        i++;
+                    }
+                    else if(!IDs.contains(numID)) {
                         if(sharedData.logs.get(checkreserve)!=null) {
                             for (int j = 0;j < sharedData.logs.get(checkreserve).size(); j++) {
                                 if (sharedData.logs.get(checkreserve).get(j).userId.equals(numID)) {
