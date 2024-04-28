@@ -13,7 +13,7 @@ import java.util.*;
 import static com.example.utils.Validation.printErrorMessage;
 
 @Slf4j
-public class KuBookLauncher {
+public class KuBookApplication {
     public static SharedData sharedData = SharedData.getInstance();
     public static void main(String[] args) throws IOException {
         FileManager fileManager = new FileManager();
