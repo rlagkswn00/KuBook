@@ -249,6 +249,7 @@ public class Validation {
         try{
             int intReservationRoomNum= Integer.parseInt(reservationRoomNum);
             if(intReservationRoomNum > maxRoomNumInBuilding || intReservationRoomNum<=0){
+                /* 호실 존재 여부, 호실 개수 범위 예외처리 */
                 printErrorMessage("예약하실 호실이 올바르지 않습니다.");
                 return false;
             }
@@ -270,7 +271,7 @@ public class Validation {
             printErrorMessage("본인을 제외한 전체 예약 인원 수는 숫자로만 이루어져야 합니다.");
             return false;
         }
-
+        /*최소 인원수 만족 예외처리*/
         try{
             int intSelfExcludedTotMemberNumber = Integer.parseInt(selfExcludedTotMemberNumber);
             if(intSelfExcludedTotMemberNumber > maxRoomCapacity || intSelfExcludedTotMemberNumber <=0){
@@ -362,7 +363,7 @@ public class Validation {
             printErrorMessage("이용 시간은 숫자로만 이루어져야 합니다.");
             return false;
         }
-
+        /*사용불가 예외처리*/
         try{
             int intReservationUseTime = Integer.parseInt(reservationUseTime);
             if(intReservationUseTime <= 0 || intReservationUseTime >= 4){
