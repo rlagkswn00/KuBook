@@ -1,25 +1,24 @@
-package com.example.model.Handler;
+package com.example.service.Handler;
 
 import com.example.SharedData;
 import com.example.model.Kcube;
 
+
 public class AdminHandler {
     SharedData sharedData = SharedData.getInstance();
-    public AdminHandler() {
-        //
-    }
+
+    Kcube kcube;
+    public AdminHandler() {}
+
     public void addBuilding(){
-        // 빌딩 추가
-            // 건물 이름 입력
+        String building ="";
 
-            // 호실 개수 지정
 
-            // 호실별 최대 인원수 지정
 
-        // sharedData 에 반영
+        kcube.setName(building);
     }
     public void addRoom(){
-
+        String room = "";
         // 방 추가
             // 건물 번호 입력
 
@@ -28,16 +27,18 @@ public class AdminHandler {
             // 호실별 최대 인원수 지정
 
         //sharedData 에 반영
-
+        kcube.setRoom(room);
     }
     public void deleteBuilding(){
+        String building;
         // 빌딩 삭제
             // 건물 번호 입력
 
         //sharedData 에 반영
-
+        kcube.setName("");
     }
     public void deleteRoom(){
+        String room;
         // 방 삭제
             // 건물 번호 선택
 
@@ -46,6 +47,7 @@ public class AdminHandler {
 
     }
     public void setMaxCapacity(){
+        String max = "";
         // 최대 인원 지정
             // 건물 선택
 
@@ -54,7 +56,7 @@ public class AdminHandler {
             // 최대 인원 선택
 
         //sharedData 에 반영
-
+        kcube.setMax(max);
     }
     public void disableRoom(){
         // 사용불가 지정
@@ -69,23 +71,30 @@ public class AdminHandler {
             // 끝시간
 
         //shardData 에 반영
-
+        kcube.setMax("");
     }
     public String readName(){
-        return
+        // todo 구현
+        return "name";
     }
-
     public String readRoom(String Name){
-        return
+        // todo 구현
+        return "room정보";
     }
     public String readMax(String Name, String Room){
-        return
+        // todo 구현
+        return "Max정보";
     }
     public String readStartTime(String Name,String Room){
-        return
+        // todo 구현
+        return "StartTime 정보";
     }
     public String readUseTime(String StartTime){
-        return
+        // todo 구현
+        return "사용시간 정보";
     }
-
+    public String readDate(){
+        // todo 구현
+        return "사용시간 정보";
+    }
 }

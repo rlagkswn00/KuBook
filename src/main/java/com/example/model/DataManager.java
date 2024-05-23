@@ -89,14 +89,4 @@ public class DataManager {
         }
         return id;
     }
-
-
-//    public String getId() {
-//        return id;
-//    }
-//
-//
-//    public List<String> getDates() {
-//        return dates;
-//    }
 }

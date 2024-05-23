@@ -1,26 +1,22 @@
 package com.example.service;
 
+import com.example.SharedData;
 import com.example.fileio.FileManager;
-import com.example.model.Date;
-import com.example.model.Handler.ReserveHandler;
-import com.example.model.KLog;
-import com.example.model.Reservation;
-import com.example.utils.Validation;
+import com.example.service.Handler.ReserveHandler;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import static com.example.utils.Validation.printErrorMessage;
-
 public class UserService extends Service {
+    public ReserveHandler reserveHandler = new ReserveHandler(dates,id);
     private final Scanner sc = new Scanner(System.in);
+    SharedData sharedData = SharedData.getInstance();
 
     public UserService(List<String> dates, String id){
         super(dates,id);
     }
-    ReserveHandler reserveHandler = new ReserveHandler(dates,id);
-    @java.lang.Override
+
+    @Override
     public void menu() {
         while(true) {
             System.out.println("1. 예약하기(예약가능목록) 2. 예약목록(본인) 3. 예약취소 4. 종료하기");
@@ -54,16 +50,19 @@ public class UserService extends Service {
             }
         }
     }
+    @Override
+    public void menu1() {
+        reserveHandler.makeReservation();
+    }
 
-    public void menu1() { reserveHandler.makeReservation(); }
-
-
+    @Override
     public void menu2() {
         reserveHandler.getReservations();
     }
 
-
+    @Override
     public void menu3() {
+
         reserveHandler.cancelReservation();
     }
 

@@ -15,13 +15,11 @@ public abstract class Service {
         this.dates = dates;
         this.id = id;
     }
-    public void display(){ // 날짜, building
-        // 예약하려고 할때
-    }
+
     public abstract void menu();
-    public abstract void menu1(List<String> dates, String ID);
-    public abstract void menu2(List<String> dates, String ID);
-    public abstract void menu3(List<String> dates, String ID);
+    public abstract void menu1();
+    public abstract void menu2();
+    public abstract void menu3();
 
 
 }

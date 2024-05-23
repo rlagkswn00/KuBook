@@ -1,21 +1,21 @@
 package com.example.service;
 
 import com.example.SharedData;
-import com.example.fileio.FileManager;
-import com.example.model.Handler.AdminHandler;
+import com.example.service.Handler.AdminHandler;
 
 import java.util.List;
 import java.util.Scanner;
 
-public class AdminService extends Service {
-    SharedData sharedData = SharedData.getInstance();
+public class AdminService extends AdminHandler {
     public AdminHandler adminHandler = new AdminHandler();
+    private final Scanner sc = new Scanner(System.in);
+    SharedData sharedData = SharedData.getInstance();
 
     public AdminService(List<String> dates, String id){
         super(dates,id);
     }
 
-    @java.lang.Override
+    @Override
     public void menu() {
         Scanner sc = new Scanner(System.in);
         while(true) {
@@ -50,11 +50,13 @@ public class AdminService extends Service {
         }
     }
 
+    @Override
     public void menu1() {
         // 사용 불가 설정
         adminHandler.disableRoom();
     }
 
+    @Override
     public void menu2() {
         //todo 건물/ 호실 추가 및 삭제 선택 메뉴 작성
 
@@ -74,6 +76,7 @@ public class AdminService extends Service {
 
 
     }
+    @Override
     public void menu3() {
         // 최대 인원수 설정
         adminHandler.setMaxCapacity();

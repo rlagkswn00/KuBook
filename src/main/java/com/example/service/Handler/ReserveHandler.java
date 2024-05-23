@@ -1,4 +1,4 @@
-package com.example.model.Handler;
+package com.example.service.Handler;
 
 import com.example.SharedData;
 import com.example.model.Date;
@@ -20,6 +20,7 @@ public class ReserveHandler {
     /* 건물 추가 및 삭제에 따른 건물 목록 구현 */
     List<String> kcubelist = new ArrayList<>(); //케이큐브 건물 목록
     LinkedHashMap<String, String> kcuberoomlist; //호실 목록
+    private Reservation reservation;
     private String reservekcube; //예약 건물 이름
     private String reservedate; //예약 날짜
     private String nroom; //예약 호실
@@ -39,8 +40,9 @@ public class ReserveHandler {
         this.dates = dates;
         this.ID = id;
     }
-    public void selectKCube(){
+    public String selectKCube(){
         //건물 선택
+
         while(true) {
             int totBuildingNum = kcubelist.size(); //건물 총 개수 처장하기
             for(int i=0; i<kcubelist.size(); i++) {
@@ -54,9 +56,11 @@ public class ReserveHandler {
                 break;
             }
         }
+        return reservekcube;
     }
-    public void selectDate(){
+    public String selectDate(){
         //날짜 선택
+
         /* 주말 예약 불가 구현 */
         label: while(true) {
             for (int i = 0; i < 8; i++) {
@@ -90,6 +94,7 @@ public class ReserveHandler {
                 break;
             }
         }
+        return reservedate;
     }
     public void display(){
         // 예약 가능한 목록 출력
@@ -125,7 +130,7 @@ public class ReserveHandler {
             System.out.println();
         }
     }
-    public void selectRoom(){
+    public String selectRoom(){
         //호실 선택
         while(true) {
             System.out.print("예약하실 호실을 선택하세요 (ex. 3) : ");
@@ -134,8 +139,9 @@ public class ReserveHandler {
                 break;
             }
         }
+        return nroom;
     }
-    public void selectNPeople(){
+    public String selectNPeople(){
         //인원수 선택
         while(true) {
             System.out.print("본인을 제외한 전체 예약 인원수를 입력하세요 (ex. 3) : "); /*최소~최대 인원수 출력*/
@@ -145,8 +151,9 @@ public class ReserveHandler {
                 break;
             }
         }
+        return "인원수 정보";
     }
-    public void getMatesIDs(){
+    public List<String> getMatesIDs(){
         //동반 예약자 입력
         IDs.add(ID);
         for(int i=0; i<Integer.parseInt(nmates);) {
@@ -188,8 +195,9 @@ public class ReserveHandler {
             }
         }
         npeople = Integer.toString(Integer.parseInt(nmates)+1);
+        return IDs; // 확인
     }
-    public void selectNStart(){
+    public String selectNStart(){
         //시작 시간 입력
         while(true) {
             System.out.print("예약 시작 시간을 입력하세요 (ex. 12) :  ");
@@ -203,8 +211,9 @@ public class ReserveHandler {
                 }
             }
         }
+        return nstart;
     }
-    public void selectNUse(){
+    public String selectNUse(){
         //이용 시간 입력
         label:while(true) {
             System.out.print("이용할 시간을 입력하세요 (1~3시간만 가능) :  ");
@@ -240,6 +249,7 @@ public class ReserveHandler {
                 }
             }
         }
+        return nuse;
     }
     public void makeReservation(){
         // 예약
@@ -385,7 +395,7 @@ public class ReserveHandler {
             sharedData.logs.get(canceldate).removeIf(n->n.useTime.equals("0"));
 
 
-            //sharedData에 취소 처리
+            //sharedData 에 취소 처리
             for (int i = 0; i < pfinalcanlist.size(); i++) {
                 if (pfinalcanlist.get(i).equals(cancellist.get(Integer.parseInt(cancel) - 1).get(canceldate))) {
                     sharedData.reservationList.get(canceldate).remove(i);
@@ -481,7 +491,7 @@ public class ReserveHandler {
     }
 
     public int minNum(int maxnum){
-        /*최소 인원수 계산 구현*/
+        //todo /*최소 인원수 계산 구현*/
         int mimnum = 0; //최소 인원수
         return mimnum;
     }
