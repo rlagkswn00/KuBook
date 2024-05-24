@@ -19,8 +19,8 @@ public class ReserveHandler {
 
     /* 건물 추가 및 삭제에 따른 건물 목록 구현 */
     List<String> kcubelist = new ArrayList<>(); //케이큐브 건물 목록
-    LinkedHashMap<String, String> kcuberoomlist; //호실 목록
-    private Reservation reservation;
+    LinkedHashMap<String, String> kcuberoomlist = new LinkedHashMap<>(); //호실 목록
+    private Reservation reservation; //예약 내역
     private String reservekcube; //예약 건물 이름
     private String reservedate; //예약 날짜
     private String nroom; //예약 호실
@@ -28,7 +28,7 @@ public class ReserveHandler {
     private String npeople; //예약 인원수
     private String nstart; //에약 시작 시간
     private String nuse; //예약 이용 시간
-    String [][] checkarr = new String[3][13]; //예약 가능 여부 저장 배열
+    String [][] checkarr = null; //예약 가능 여부 저장 배열
     Date checkreserve = new Date(dates.get(Integer.parseInt(reservedate)),null); //예약 날짜 객체
     List<String> IDs = new ArrayList<>(); //학번 목록 저장
     List<Map<Date,Reservation>> cancellist = new ArrayList<>(); //예약 취소 가능 목록
@@ -52,7 +52,7 @@ public class ReserveHandler {
             String kcubenum = sc.nextLine();
             if(Validation.validateBuildingNum(kcubenum,totBuildingNum)){
                 reservekcube = kcubelist.get(Integer.parseInt(kcubenum)-1); //건물 이름 저장
-                /* kcuberoomlist에 해당 건물 호실 정보 저장하기 */
+                //todo kcuberoomlist에 해당 건물 호실 정보 저장하기
                 break;
             }
         }
@@ -61,7 +61,7 @@ public class ReserveHandler {
     public String selectDate(){
         //날짜 선택
 
-        /* 주말 예약 불가 구현 */
+        /* todo 주말 예약 불가 구현 */
         label: while(true) {
             for (int i = 0; i < 8; i++) {
                 System.out.print("(" + i + ") " + dates.get(i) + " ");
@@ -102,13 +102,14 @@ public class ReserveHandler {
         System.out.println("        09  10  11  12  13  14  15  16  17  18  19  20  21");
 
         //예약 가능 여부 체크
+        checkarr = new String[kcuberoomlist.size()][13];
         for(int i=0; i<kcuberoomlist.size(); i++){
             for(int j=0; j<13; j++){
                 checkarr[i][j] = "   □";  // 모두 선택 '가능'으로 초기화
             }
         }
 
-        /*호실 문법규칙 수정에 따른 변수 수정 필요*/
+        //todo 호실 문법규칙 수정에 따른 변수, 예외처리 수정
         List<Reservation> reslist = sharedData.reservationList.get(checkreserve);
         if (reslist != null) { // 해당 날짜에 예약 목록이 존재하는 경우
             for (int i = 0; i < reslist.size(); i++) {
@@ -141,10 +142,10 @@ public class ReserveHandler {
         }
         return nroom;
     }
-    public String selectNPeople(){
+    public String inputNPeople(){
         //인원수 선택
         while(true) {
-            System.out.print("본인을 제외한 전체 예약 인원수를 입력하세요 (ex. 3) : "); /*최소~최대 인원수 출력*/
+            System.out.print("본인을 제외한 전체 예약 인원수를 입력하세요 (ex. 3) : "); //todo 최소~최대 인원수 출력
 
             nmates = sc.nextLine();
             if(Validation.validateSelfExcludedTotMemberNumber(nmates, Integer.parseInt(sharedData.kcubes.get(Validation.selectedRoomNum-1).getMax())-1)) {
@@ -153,7 +154,7 @@ public class ReserveHandler {
         }
         return "인원수 정보";
     }
-    public List<String> getMatesIDs(){
+    public List<String> inputMatesIDs(){
         //동반 예약자 입력
         IDs.add(ID);
         for(int i=0; i<Integer.parseInt(nmates);) {
@@ -197,12 +198,12 @@ public class ReserveHandler {
         npeople = Integer.toString(Integer.parseInt(nmates)+1);
         return IDs; // 확인
     }
-    public String selectNStart(){
+    public String inputNStart(){
         //시작 시간 입력
         while(true) {
             System.out.print("예약 시작 시간을 입력하세요 (ex. 12) :  ");
             nstart = sc.nextLine();
-            /* 예약 불가능 예외처리 */
+            //todo 사용불가 -> 예약 불가능 예외처리
             if(Validation.validateReservationStartTime(reservedate, nstart)){
                 if(checkarr[Integer.parseInt(nroom)-1][Integer.parseInt(nstart)-9].equals("   ■")){
                     System.out.println("오류! 예약이 불가한 시간입니다.");
@@ -213,7 +214,7 @@ public class ReserveHandler {
         }
         return nstart;
     }
-    public String selectNUse(){
+    public String inputNUse(){
         //이용 시간 입력
         label:while(true) {
             System.out.print("이용할 시간을 입력하세요 (1~3시간만 가능) :  ");
@@ -257,14 +258,14 @@ public class ReserveHandler {
         selectDate();
         display();
         selectRoom();
-        selectNPeople();
-        getMatesIDs();
-        selectNStart();
-        selectNUse();
+        inputNPeople();
+        inputMatesIDs();
+        inputNStart();
+        inputNUse();
 
         //sharedData에 예약 목록과 로그 업데이트
-        Reservation nreserve = Reservation.from(reservekcube, nroom, nstart, nuse, npeople, IDs);
-        sharedData.reservationList.get(checkreserve).add(nreserve);
+        reservation = Reservation.from(reservekcube, nroom, nstart, nuse, npeople, IDs);
+        sharedData.reservationList.get(checkreserve).add(reservation);
         boolean logflag = true;
         for(int i=0; i<IDs.size(); i++){
             logflag = true;
@@ -326,7 +327,7 @@ public class ReserveHandler {
 
     }
     public void personalcancel(String cancel){
-        //개인 예약 취소
+        //todo 개인 예약 취소
     }
     public void allcancel(String cancel){
         //전체 예약 취소
@@ -462,7 +463,7 @@ public class ReserveHandler {
             }
             pfinalcanlist = sharedData.reservationList.get(canceldate); //취소 날짜의 예약 목록
             pIDs = cancellist.get(Integer.parseInt(cancel)-1).get(canceldate).userIds; //학번들
-            if(){ /* 조건 설정 */
+            if(){ // todo 예약 취소 조건 설정
                 personalcancel(cancel); //개인 예약 취소
             }
             else{
@@ -491,7 +492,7 @@ public class ReserveHandler {
     }
 
     public int minNum(int maxnum){
-        //todo /*최소 인원수 계산 구현*/
+        //todo 최소 인원수 계산 구현
         int mimnum = 0; //최소 인원수
         return mimnum;
     }

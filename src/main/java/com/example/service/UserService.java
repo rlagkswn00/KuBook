@@ -61,10 +61,7 @@ public class UserService extends Service {
     }
 
     @Override
-    public void menu3() {
-
-        reserveHandler.cancelReservation();
-    }
+    public void menu3() {reserveHandler.cancelReservation();}
 
 
 
