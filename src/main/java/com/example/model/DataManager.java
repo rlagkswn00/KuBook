@@ -3,12 +3,13 @@ package com.example.model;
 import com.example.SharedData;
 import com.example.fileio.FileManager;
 import com.example.utils.Validation;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-
+@Getter
 public class DataManager {
     private static final SharedData sharedData = SharedData.getInstance();
     private String time;
