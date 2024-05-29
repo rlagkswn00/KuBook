@@ -31,13 +31,13 @@ public class AdminService extends Service {
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
-                    menu1();
+                    adminMenu1_setUnavailable();
                     break;
                 case "2":
-                    menu2();
+                    adminMenu2_updateBuildingAndRooms();
                     break;
                 case "3":
-                    menu3();
+                    adminMenu3_setMaxPeople();
                     break;
                 case "4":
                     System.out.print("시스템을 종료합니다.");
@@ -53,14 +53,12 @@ public class AdminService extends Service {
         }
     }
 
-    @Override
-    public void menu1() {
+    public void adminMenu1_setUnavailable() {
         // 사용 불가 설정
         adminHandler.disableRoom();
     }
 
-    @Override
-    public void menu2() {
+    public void adminMenu2_updateBuildingAndRooms() {
         //todo 건물/ 호실 추가 및 삭제 선택 메뉴 작성
 
         // 대응하는 일들
@@ -79,8 +77,8 @@ public class AdminService extends Service {
 
 
     }
-    @Override
-    public void menu3() {
+
+    public void adminMenu3_setMaxPeople() {
         // 최대 인원수 설정
         adminHandler.setMaxCapacity();
     }

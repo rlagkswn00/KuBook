@@ -4,6 +4,7 @@ import com.example.SharedData;
 import com.example.fileio.FileManager;
 import com.example.service.Handler.ReserveHandler;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -17,7 +18,7 @@ public class UserService extends Service {
     }
 
     @Override
-    public void menu() {
+    public void menu() throws IOException {
         while(true) {
             System.out.println("1. 예약하기(예약가능목록) 2. 예약목록(본인) 3. 예약취소 4. 종료하기");
             System.out.print("메뉴를 선택하세요 (ex. 1) : ");
@@ -30,13 +31,13 @@ public class UserService extends Service {
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
-                    menu1();
+                    userMenu1_bookReservation();
                     break;
                 case "2":
-                    menu2();
+                    userMenu2_showReservationList();
                     break;
                 case "3":
-                    menu3();
+                    userMenu3_cancleReservation();
                     break;
                 case "4":
                     System.out.print("시스템을 종료합니다.");
@@ -50,18 +51,18 @@ public class UserService extends Service {
             }
         }
     }
-    @Override
-    public void menu1() {
+
+    public void userMenu1_bookReservation() {
         reserveHandler.makeReservation();
     }
 
-    @Override
-    public void menu2() {
+
+    public void userMenu2_showReservationList() {
         reserveHandler.getReservations();
     }
 
-    @Override
-    public void menu3() {reserveHandler.cancelReservation();}
+
+    public void userMenu3_cancleReservation() {reserveHandler.cancelReservation();}
 
 
 

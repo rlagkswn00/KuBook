@@ -18,9 +18,5 @@ public abstract class Service {
     }
 
     public abstract void menu() throws IOException;
-    public abstract void menu1();
-    public abstract void menu2();
-    public abstract void menu3();
-
 
 }
