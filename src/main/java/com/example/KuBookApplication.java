@@ -1,5 +1,6 @@
 package com.example;
 
+import com.example.fileio.FileManager;
 import com.example.service.Service;
 import com.example.model.*;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +12,7 @@ public class KuBookApplication {
 
     public static void main(String[] args) throws IOException {
         ServiceFactory serviceFactory = new ServiceFactory();
+        FileManager fileManager = new FileManager();
         DataManager datamanager = new DataManager();
         Service service = serviceFactory.login(datamanager);
         service.menu();
