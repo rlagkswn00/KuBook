@@ -12,7 +12,7 @@ public class KuBookApplication {
 
     public static void main(String[] args) throws IOException {
         ServiceFactory serviceFactory = new ServiceFactory();
-        FileManager fileManager = new FileManager();
+        FileManager.getInstance().load();
         DataManager datamanager = new DataManager();
         Service service = serviceFactory.login(datamanager);
         service.menu();

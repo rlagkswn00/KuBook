@@ -1,8 +1,10 @@
 package com.example.service;
 
 import com.example.SharedData;
+import com.example.fileio.FileManager;
 import com.example.service.Handler.AdminHandler;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -16,7 +18,7 @@ public class AdminService extends Service {
     }
 
     @Override
-    public void menu() {
+    public void menu() throws IOException {
         Scanner sc = new Scanner(System.in);
         while(true) {
             // todo 메뉴 목록 출력 코드 작성
@@ -40,7 +42,8 @@ public class AdminService extends Service {
                 case "4":
                     System.out.print("시스템을 종료합니다.");
                     sc.close();
-                    fileManager.save();
+                    FileManager.getInstance().save();
+//                    fileManager.save();
                     System.exit(0);
                     break;
                 default:

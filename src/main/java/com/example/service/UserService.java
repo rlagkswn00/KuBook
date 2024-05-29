@@ -41,7 +41,7 @@ public class UserService extends Service {
                 case "4":
                     System.out.print("시스템을 종료합니다.");
                     sc.close();
-                    FileManager.save();
+                    FileManager.getInstance().save();
                     System.exit(0);
                     break;
                 default:

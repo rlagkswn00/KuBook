@@ -11,17 +11,24 @@ import java.util.List;
 
 @Slf4j
 public class FileManager {
+
+    private static FileManager instance;
+    private FileManager(){}
+    public static FileManager getInstance(){
+        if (instance == null) {
+            instance = new FileManager();
+        }
+        return instance;
+    }
+
     public LoadManager loadManager = LoadManager.getInstance();
     public SharedData sharedData = SharedData.getInstance();
 
-    public FileManager() throws IOException {
-        load();
-    }
 
     /**
      * 프로그램 시작 시 호출되며, 파일의 데이터들을 프로그램 내에서 쓰일 객체로 변환
      */
-    private void load() throws IOException {
+    public void load() throws IOException {
 //        log.info("load 진입");
         loadManager.loadCurrentTime();
         loadManager.loadReservation();
