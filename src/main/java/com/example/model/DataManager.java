@@ -90,4 +90,9 @@ public class DataManager {
         }
         return id;
     }
+
+    public boolean isAdmin() {
+        if("admin".equals(id)) return true;
+        return false;
+    }
 }

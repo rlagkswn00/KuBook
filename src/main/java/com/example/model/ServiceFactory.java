@@ -8,12 +8,10 @@ public class ServiceFactory {
 
 
     public Service login(DataManager dataManager){
-        Service service;
-        if(dataManager.getId().equals("admin")){
-            service = new AdminService(dataManager.getDates(),dataManager.getId());
+        if(dataManager.isAdmin()){
+            return new AdminService(dataManager.getDates(), dataManager.getId());
         }else {
-            service = new UserService(dataManager.getDates(),dataManager.getId());
+            return new UserService(dataManager.getDates(), dataManager.getId());
         }
-        return service;
     }
 }
