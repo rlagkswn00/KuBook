@@ -6,7 +6,7 @@ import com.example.service.Handler.AdminHandler;
 import java.util.List;
 import java.util.Scanner;
 
-public class AdminService extends AdminHandler {
+public class AdminService extends Service {
     public AdminHandler adminHandler = new AdminHandler();
     private final Scanner sc = new Scanner(System.in);
     SharedData sharedData = SharedData.getInstance();
