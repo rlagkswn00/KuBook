@@ -303,7 +303,7 @@ public class ReserveHandler {
                             System.out.print(reslist.get(j).name+", "+reslist.get(j).room+"호실, "
                                     + dates.get(i)+", "+reslist.get(j).startTime+"시, "+reslist.get(j).useTime+"h, ");
                             List<String> others = reslist.get(j).userIds;
-                            ListToString(others, ID);
+                            printList(others, ID);
                         }
                     }
                     reserveflag = false;
@@ -440,7 +440,7 @@ public class ReserveHandler {
                         System.out.print(reservenum+". "+reslist.get(j).name+", "+reslist.get(j).room+"호실, "
                                 + dates.get(i)+", "+reslist.get(j).startTime+"시, "+reslist.get(j).useTime+"h, ");
                         List<String> others = reslist.get(j).userIds;
-                        ListToString(others, ID);
+                        printList(others, ID);
                         Map<Date, Reservation> map = new HashMap<>();
                         map.put(new Date(date), res);
                         cancelList.add(map);
@@ -479,7 +479,7 @@ public class ReserveHandler {
         }
     }
 
-    public void ListToString(List<String> s, String ID){
+    public void printList(List<String> s, String ID){
         //학번 출력 방식
         System.out.print("(");
         boolean flag = true;
