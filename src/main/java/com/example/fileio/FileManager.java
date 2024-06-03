@@ -35,6 +35,7 @@ public class FileManager {
         loadManager.loadLog();
         loadManager.loadKcube();
         loadManager.loadPenalty();
+        loadManager.loadDisableKcube();
     }
 
     /**
@@ -47,6 +48,7 @@ public class FileManager {
         saveManager.savePenalty();
         saveManager.saveLog();
         saveManager.saveReservation();
+        saveManager.saveDisableKcube();
 //        log.info("save 성공");
     }
 

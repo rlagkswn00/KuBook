@@ -161,6 +161,30 @@ public class LoadManager {
         SharedData.getInstance().penalizedUsers.put(new Date(dateStr), penalizedUsers);
     }
 
+    public void loadDisableKcube() throws IOException{
+        File file = new File(DISABLE_KCUBE_TXT);
+        if (!file.exists()) {
+            throw new RuntimeException("파일형식에 문제가 있습니다 ! (DisableKcube)");
+        }
+        br = new BufferedReader(new FileReader(file));
+        String line = "";
+        List<DisableKcube> disableKcubes = new ArrayList<>();
+        while ((line = br.readLine()) != null) {
+            String[] splitedLine = line.split(",");
+            DisableKcube disableKcube = DisableKcube.fromFile(splitedLine);
+            String dateString = disableKcube.getDate();
+            Date date = Date.fromWithNoValidation(dateString, null);
+            List<DisableKcube> disableKcubeList = SharedData.getInstance()
+                    .disableKcubes.getOrDefault(date, null);
+            if (disableKcubeList == null) {
+                disableKcubeList = new ArrayList<>();
+            }
+            disableKcubeList.add(disableKcube);
+            SharedData.getInstance()
+                    .disableKcubes.put(date, disableKcubeList);
+        }
+    }
+
     private String parseFileName(File file, int beginIndex) {
         int dotIndex = file.getName().lastIndexOf(".");
         String dateStr = file.getName().substring(beginIndex, dotIndex);

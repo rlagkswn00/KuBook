@@ -2,6 +2,7 @@ package com.example.fileio;
 
 import com.example.SharedData;
 import com.example.model.Date;
+import com.example.model.DisableKcube;
 import com.example.model.KLog;
 import com.example.model.Model;
 import com.example.model.PenaltyUser;
@@ -12,12 +13,14 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
 import static com.example.fileio.FilePath.CURRENT_TIME_TXT;
 import static com.example.fileio.FilePath.DATA_DIR;
+import static com.example.fileio.FilePath.DISABLE_KCUBE_TXT;
 import static com.example.fileio.FilePath.ETC_DIR;
 import static com.example.fileio.FilePath.LOG_DIR;
 import static com.example.fileio.FilePath.RESERVATION_DIR;
@@ -39,6 +42,7 @@ public class SaveManager {
 
     /**
      * dirPath에 해당하는 디렉토리의 모든 파일을 삭제
+     *
      * @param dirPath : 디렉토리 경로
      */
     private void resetFilesInDir(String dirPath) {
@@ -129,6 +133,28 @@ public class SaveManager {
         writeModelsToFile(file, penalizedUsers);
     }
 
+    public void saveDisableKcube() throws IOException {
+        File etcDir = new File(ETC_DIR);
+        Validation.existDir(etcDir);
+
+        // disableKcube 파일 찾아서 삭제
+        Arrays.stream(etcDir.listFiles())
+                .filter(file -> file.getName().startsWith("disableKcube.txt"))
+                .findFirst().ifPresent(File::delete);
+
+        File file = new File(DISABLE_KCUBE_TXT);
+        Validation.existFile(file);
+
+        List<DisableKcube> disableKcubes = new ArrayList<>();
+
+        Set<Date> dates = sharedData.disableKcubes.keySet();
+        for (Date date : dates) {
+            if (date.isAfterFrom(sharedData.currentTime)) {
+                disableKcubes.addAll(sharedData.disableKcubes.get(date));
+            }
+        }
+        writeModelsToFile(file, disableKcubes);
+    }
     /**
      * model들을 file에 쓰는 작업을 담당
      *

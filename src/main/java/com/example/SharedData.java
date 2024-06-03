@@ -13,6 +13,7 @@ public class SharedData {
 
     public Date currentTime;
     public List<Kcube> kcubes = new ArrayList<>();
+    public Map<Date, List<DisableKcube>> disableKcubes = new HashMap<>();
     public Map<Date, List<PenaltyUser>> penalizedUsers = new HashMap<>();
     public Map<Date, List<KLog>> logs = new HashMap<>();
     public Map<Date, List<Reservation>> reservationList = new HashMap<>();
@@ -34,6 +35,8 @@ public class SharedData {
                 "* penalizedUsers=" + penalizedUsers + "\n" +
                 "* logs=" + logs + "\n" +
                 "* reservationList=" + reservationList + "\n" +
+                "* disableKcubes=" + disableKcubes + "\n" +
                 '}';
     }
+
 }

@@ -81,8 +81,15 @@ public class DataManager {
             System.out.print("학번을 입력해주세요 (ex. 202012345) : ");
             this.id = sc.nextLine();
             if(id.equals("admin")){
-                //todo 여기서 비밀번호 입력 처리
-                return id;
+                while (true) {
+                    System.out.print("비밀번호를 입력해주세요.: ");
+                    String password = sc.nextLine();
+                    if (password.equals("qwer1234")) {
+                        //정상 로그인됨
+                        return id;
+                    }
+                    System.out.println("오류! 유효하지 않은 비밀번호입니다");
+                }
             }
             if(Validation.validateUserId(id)){
                 break;
