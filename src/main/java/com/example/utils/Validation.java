@@ -15,7 +15,6 @@ public class Validation {
     public static SharedData sharedData = SharedData.getInstance();
 
     public static int selectedRoomNum;
-    public static int selectedCancelNum;
     public static int selectedReservationDate;
 
     public static boolean isTheSameDay = false;
@@ -302,12 +301,11 @@ public class Validation {
                 printErrorMessage("입력하신 취소 번호가 올바르지 않습니다.");
                 return false;
             }
-            selectedCancelNum=intCancelNum;
+            return true;
         }catch(NumberFormatException e){
             printErrorMessage("입력하신 취소 번호는 숫자로 이루어져야 합니다.");
             return false;
         }
-        return true;
     }
 
     public static boolean validateSameDayCanceling(String input){
