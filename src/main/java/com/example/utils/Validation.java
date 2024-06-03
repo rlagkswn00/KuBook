@@ -13,10 +13,6 @@ import java.time.format.DateTimeFormatter;
 @Slf4j
 public class Validation {
     public static SharedData sharedData = SharedData.getInstance();
-
-    public static int selectedRoomNum;
-    public static int selectedReservationDate;
-
     public static boolean isTheSameDay = false;
 
     public static boolean validateUserId(String userId) {
@@ -209,7 +205,7 @@ public class Validation {
         return true;
     }
 
-    public static boolean validateReservationDate(String reservationDate,int max){
+    public static boolean validateReservationDate(String reservationDate, int max){
         if(reservationDate==null){
             printErrorMessage("reservationDate is null");
             return false;
@@ -226,12 +222,13 @@ public class Validation {
                 printErrorMessage("예약하실 날짜가 올바르지 않습니다.");
                 return false;
             }
-            selectedReservationDate=intReservationDate;
+//            selectedReservationDate=intReservationDate;
+            return true;
         }catch(NumberFormatException e){
             printErrorMessage("예약하실 날짜는 숫자로 이루어져야 합니다.");
             return false;
         }
-        return true;
+//        return true;
     }
 
     public static boolean validateReservationRoomNum(String reservationRoomNum,int maxRoomNumInBuilding){
@@ -252,12 +249,13 @@ public class Validation {
                 printErrorMessage("예약하실 호실이 올바르지 않습니다.");
                 return false;
             }
-            selectedRoomNum=intReservationRoomNum;
+//            selectedRoomNum=intReservationRoomNum;
+            return true;
         }catch(NumberFormatException e) {
             printErrorMessage("예약하실 호실은 숫자로 이루어져야 합니다.");
             return false;
         }
-        return true;
+//        return true;
     }
 
     public static boolean validateSelfExcludedTotMemberNumber(String selfExcludedTotMemberNumber,int maxRoomCapacity){
