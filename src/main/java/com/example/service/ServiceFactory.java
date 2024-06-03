@@ -1,8 +1,6 @@
-package com.example.model;
+package com.example.service;
 
-import com.example.service.AdminService;
-import com.example.service.Service;
-import com.example.service.UserService;
+import com.example.model.DataManager;
 
 public class ServiceFactory {
 
