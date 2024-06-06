@@ -37,7 +37,7 @@ public class UserService extends Service {
                     userMenu2_showReservationList();
                     break;
                 case "3":
-                    userMenu3_cancleReservation();
+                    userMenu3_cancelReservation();
                     break;
                 case "4":
                     System.out.print("시스템을 종료합니다.");
@@ -62,7 +62,9 @@ public class UserService extends Service {
     }
 
 
-    public void userMenu3_cancleReservation() {reserveHandler.cancelReservation();}
+    public void userMenu3_cancelReservation() {
+        reserveHandler.cancelReservation();
+    }
 
 
 
