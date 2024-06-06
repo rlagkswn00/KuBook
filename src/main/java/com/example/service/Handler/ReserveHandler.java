@@ -12,10 +12,10 @@ import static com.example.utils.Validation.printErrorMessage;
 
 public class ReserveHandler {
     private String ID; // 예약자
-    private List<String> dates;
+    private List<String> dates; // 8일
     private SharedData sharedData = SharedData.getInstance();
     private Scanner sc = new Scanner(System.in);
-    private List<String> kcubeList = new ArrayList<>(); //케이큐브 건물 목록
+    private List<String> kcubeList = new ArrayList<>(); //케이큐브 건물 이름 목록
     private LinkedHashMap<Integer, Integer> selectKcubeRoomList = new LinkedHashMap<>(); // 호실 목록 (roomNum, max)
     private Reservation reservation; // 예약 내역
     private String[][] checkarr = null; // 예약 가능 여부 저장 배열
@@ -71,18 +71,18 @@ public class ReserveHandler {
             int totalBuildingNum = kcubeList.size(); // 건물 총 개수 저장하기
 
             for(int i = 0; i < totalBuildingNum; i++) {
-                System.out.print(i+1+". "+ kcubeList.get(i));
+                System.out.print((i+1)+". "+ kcubeList.get(i));
             }
             System.out.print("예약하실 건물을 선택하세요 (ex. 1) : ");
             String kcubeNum = sc.nextLine();
             if(Validation.validateBuildingNum(kcubeNum, totalBuildingNum)){
-                reservation.setName(kcubeList.get(toInt(kcubeNum)-1)); // 건물 이름 저장
-                // todo kcuberoomList에 해당 건물 호실 정보 저장하기
+                reservation.setName(kcubeList.get(toInt(kcubeNum)-1)); // 건물 이름 set
                 updateSelectKcubeRoom();
                 break;
             }
         }
     }
+
     private void selectDate(){
         //날짜 선택 selectedReservationDateNum
         String chosenDateIndex;
@@ -302,7 +302,6 @@ public class ReserveHandler {
         selectDate();
         display();
         selectRoom();
-//        inputNPeople();
         inputMatesIDs(inputNPeople());
         inputNStart();
         inputNUse();
@@ -473,6 +472,7 @@ public class ReserveHandler {
             System.out.println("취소되었습니다. 5초 후 메뉴로 돌아갑니다.\n");
         }
     }
+
     public void cancelReservation(){
         // 예약 취소
         System.out.println("\n[ 건물, 호실, 사용할 날짜, 예약 시작 시간, 이용시간, (학번들) ]");
