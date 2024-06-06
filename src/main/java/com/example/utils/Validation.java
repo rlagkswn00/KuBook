@@ -2,6 +2,7 @@ package com.example.utils;
 
 import com.example.SharedData;
 import com.example.model.Date;
+import com.example.model.PenaltyUser;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
@@ -14,6 +15,7 @@ import java.time.format.DateTimeFormatter;
 public class Validation {
     public static SharedData sharedData = SharedData.getInstance();
     public static boolean isTheSameDay = false;
+    public static final Integer MAX_RESERVABLE_DATES = 8;
 
     public static boolean validateUserId(String userId) {
         if(userId.length() != 9) {
@@ -205,30 +207,52 @@ public class Validation {
         return true;
     }
 
-    public static boolean validateReservationDate(String reservationDate, int max){
-        if(reservationDate==null){
-            printErrorMessage("reservationDate is null");
+    // userId의 date 패널티 여부 반환
+    public static boolean isPenaltyUser(Date date, String userId) {
+        List<PenaltyUser> penaltyUsers = sharedData.penalizedUsers.get(date);
+        for (PenaltyUser penaltyUser : penaltyUsers) {
+            if (penaltyUser.userId.equals(userId))
+                return true;
+        }
+        return false;
+    }
+
+    public static boolean isSameDate(Date targetDate, String today) {
+        return targetDate.date.equals(today);
+    }
+
+    public static boolean checkNHoursUsage(Date targetDate, String userId, int N) {
+        List<KLog> kLogs = sharedData.logs.get(targetDate);
+        for (KLog kLog : kLogs) {
+            if (kLog.userId.equals(userId) && Integer.parseInt(kLog.useTime) >= N) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean validateChosenDateIndex(String chosenDateIndex){
+        if(chosenDateIndex==null){
+            printErrorMessage("선택한 예약 날짜가 null 입니다.");
             return false;
         }
 
-        if (!reservationDate.matches("\\d+")) {
+        if (!chosenDateIndex.matches("\\d+")) {
             printErrorMessage("예약하실 날짜 번호는 숫자로만 이루어져야 합니다.");
             return false;
         }
 
         try{
-            int intReservationDate= Integer.parseInt(reservationDate);
-            if(intReservationDate > max || intReservationDate < 0){
+            int intChosenDateIndex=Integer.parseInt(chosenDateIndex);
+            if(intChosenDateIndex < 0 || intChosenDateIndex > MAX_RESERVABLE_DATES){
                 printErrorMessage("예약하실 날짜가 올바르지 않습니다.");
                 return false;
             }
-//            selectedReservationDate=intReservationDate;
             return true;
         }catch(NumberFormatException e){
-            printErrorMessage("예약하실 날짜는 숫자로 이루어져야 합니다.");
+            printErrorMessage("예약하실 날짜 번호는 숫자로만 이루어져야 합니다.");
             return false;
         }
-//        return true;
     }
 
     public static boolean validateReservationRoomNum(String reservationRoomNum,int maxRoomNumInBuilding){

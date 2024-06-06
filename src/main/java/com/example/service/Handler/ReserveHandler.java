@@ -34,6 +34,14 @@ public class ReserveHandler {
         reservation = new Reservation();
     }
 
+    /** @return 예약하려는 날짜 번호에 해당하는 (String) 날짜 */
+    private String getDateByIndex(String idx){
+        return dates.get(Integer.parseInt(idx));
+    }
+    private boolean isToday(Date targetDate){
+        return Validation.isSameDate(targetDate, dates.get(0));
+    }
+
     private void loadKcubeList(){
         for(Kcube kcube : sharedData.getKcubes()){
             kcubeList.add(kcube.name);
@@ -70,46 +78,41 @@ public class ReserveHandler {
         }
     }
     private void selectDate(){
-        //날짜 선택
-        String reserveDateNum;
-        /* todo 주말 예약 불가 구현 */
-        label: while(true) {
+        //날짜 선택 selectedReservationDateNum
+        String chosenDateIndex;
+        String chosenDateStr;
+        Date chosenDate;
+
+        while(true) {
             for (int i = 0; i < 8; i++) {
                 String curDate = dates.get(i);
                 System.out.print("(" + i + ") " + curDate +"["+ Date.getDayOfWeek(curDate) + "] ");
             }
             System.out.print("\n예약하실 날짜를 선택하세요 (ex. 1) : ");
-            reserveDateNum = sc.nextLine();
-            //출력할 날짜의 개수
-            int totPrintedDate=7;
+            chosenDateIndex = sc.nextLine();
 
-            if(Validation.validateReservationDate(reserveDateNum, totPrintedDate)){
-                //패널티 대상자 처리
-                if(sharedData.penalizedUsers.get(Date.fromWithNoValidation(dates.get(0),null))!=null) {
-                    for (int i = 0; i < sharedData.penalizedUsers.get(Date.fromWithNoValidation(dates.get(0), null)).size(); i++) {
-                        if (sharedData.penalizedUsers.get(Date.fromWithNoValidation(dates.get(0), null)).get(i).userId.equals(ID)
-                                && reserveDate.date.equals(dates.get(0))) {
-                            printErrorMessage("해당 날짜는 페널티에 의해 예약하실 수 없습니다.");
-                            continue label;
-                        }
-                    }
-                }
-                if(sharedData.logs.get(new Date(dates.get(toInt(reserveDateNum)),null))!=null) {
-                    for (int i = 0; i < sharedData.logs.get(new Date(dates.get(toInt(reserveDateNum)),null)).size(); i++) {
-                        if (sharedData.logs.get(new Date(dates.get(toInt(reserveDateNum)),null)).get(i).userId.equals(ID)) {
-                            if (toInt(sharedData.logs.get(new Date(dates.get(toInt(reserveDateNum)),null)).get(i).useTime) >= 3) {
-                                System.out.println("해당 날짜의 누적 이용시간은 3시간이므로 예약하실 수 없습니다.");
-                                continue label;
-                            }
-                        }
-                    }
-                }
-                break;
+            if(!Validation.validateChosenDateIndex(chosenDateIndex))
+                continue;
+
+            chosenDateStr = getDateByIndex(chosenDateIndex);
+
+            chosenDate = new Date(chosenDateStr);
+            // 패널티 대상자 처리
+            // 예약하려는 날짜가 당일 && 패널티 받은 예약자
+            if(isToday(chosenDate) && Validation.isPenaltyUser(chosenDate, ID)){
+                printErrorMessage("해당 날짜는 페널티에 의해 예약하실 수 없습니다.");
+                continue;
             }
+
+            if(Validation.checkNHoursUsage(chosenDate, ID, 3)){
+                printErrorMessage("해당 날짜의 누적 이용시간은 3시간이므로 예약하실 수 없습니다.");
+                continue;
+            }
+            break;
+
         }
 
-        reserveDate = new Date(dates.get(toInt(reserveDateNum)),null);
-
+        reserveDate = chosenDate;
     }
     public void display(){
         // 예약 가능한 목록 출력
