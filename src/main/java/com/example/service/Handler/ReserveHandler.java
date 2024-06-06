@@ -144,11 +144,24 @@ public class ReserveHandler {
             }
         }
 
+        // 관리자 설정 파일 적용
+        List<DisableKcube> disableKcubes = sharedData.disableKcubes.get(reserveDate);
+        for (DisableKcube kcube : disableKcubes) {
+            if(!kcube.name.equals(reservation.name))
+                continue;
+            int kcubeRoom = toInt(kcube.room);
+            int kcubeStartTime = toInt(kcube.startTime);
+            int kcubeEndTime = toInt(kcube.endTime);
+            // checkarr 에 예약불가목록 적용
+            for (int time = kcubeStartTime - 9; time < kcubeEndTime - 9; time++) {
+                checkarr[kcubeRoom - 1][time] = UNAVAILABLE_TIME_STR;
+            }
+        }
         //예약 가능 테이블 출력
-        for(int i = 0; i< selectKcubeRoomList.size(); i++) {
-            System.out.print((i+1)+"호실 ");
-            for(int j=0; j<13; j++){
-                System.out.print(checkarr[i][j]);
+        for(int room = 0; room < selectKcubeRoomList.size(); room++) {
+            System.out.print((room+1)+"호실 ");
+            for(int time = 0; time < 13; time++){
+                System.out.print(checkarr[room][time]);
             }
             System.out.println();
         }
