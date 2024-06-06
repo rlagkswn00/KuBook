@@ -20,6 +20,13 @@ public class Reservation implements Model{
     public String numOfPeople;
     public List<String> userIds;
 
+
+    public void decreaseNumOfPeople() {
+        if(numOfPeople!=null){
+            numOfPeople = Integer.toString((Integer.parseInt(numOfPeople)-1));
+        }
+    }
+
     public static Reservation from(String name, String room, String startTime, String useTime, String numOfPeople, List<String> userIds){
         return Reservation.builder()
                 .name(name)

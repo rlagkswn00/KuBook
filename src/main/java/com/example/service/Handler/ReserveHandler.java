@@ -402,6 +402,7 @@ public class ReserveHandler {
         /* 2) 예약목록에서 해당 이용자만 삭제 */
         sharedData.reservationList.get(cancelDate).remove(cancelReservation);
         cancelReservation.userIds.removeIf(userId -> userId.equals(ID));
+        cancelReservation.decreaseNumOfPeople();
         sharedData.reservationList.get(cancelDate).add(cancelReservation);
 
 
