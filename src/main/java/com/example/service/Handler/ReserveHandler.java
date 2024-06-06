@@ -382,21 +382,23 @@ public class ReserveHandler {
         Reservation cancelReservation = cancelableList.get(cancelIdx).get(cancelDate);
 
         /* 1) log 삭제 */
-        List<KLog> kLogList = sharedData.logs.get(cancelDate);
+        List<KLog> updatedKLogList = new ArrayList<>();
 
         // 1. kLog 리스트 update(변경 || 삭제) - 교체방식
-        for(KLog kLog : kLogList){
-            if(kLog.userId.equals(pID)){ // pID의 로그
+        for (KLog kLog : sharedData.logs.get(cancelDate)) {
+            if (kLog.userId.equals(pID)) { // pID의 로그
                 int changeUseTime = toInt(kLog.useTime) - toInt(cancelReservation.useTime);
-                if(changeUseTime > 0)
-                    kLogList.add(KLog.from(kLog.userId, Integer.toString(changeUseTime)));
-                kLogList.remove(kLog);
+                if (changeUseTime > 0)
+                    updatedKLogList.add(KLog.from(kLog.userId, Integer.toString(changeUseTime))); // 새로운 로그 추가
+            }else{
+                updatedKLogList.add(kLog);
             }
         }
 
         // 2. update한 kLog리스트를 sharedData에 적용 - 교체방식
         sharedData.logs.remove(cancelDate);
-        sharedData.logs.put(cancelDate, kLogList);
+        sharedData.logs.put(cancelDate, updatedKLogList);
+
 
         
         /* 2) 예약목록 삭제 */
@@ -444,21 +446,22 @@ public class ReserveHandler {
         // sharedData에 예약자, 동반 예약자 당일 예약 취소 처리 & 로그 업데이트 & 패널티
         for(String pID : pIDs){
             /* 1) log 삭제 */
-            List<KLog> kLogList = sharedData.logs.get(cancelDate);
+            List<KLog> updatedKLogList = new ArrayList<>();
 
             // 1. kLog 리스트 update(변경 || 삭제) - 교체방식
-            for(KLog kLog : kLogList){
-                if(kLog.userId.equals(pID)){ // pID의 로그
+            for (KLog kLog : sharedData.logs.get(cancelDate)) {
+                if (kLog.userId.equals(pID)) { // pID의 로그
                     int changeUseTime = toInt(kLog.useTime) - toInt(cancelReservation.useTime);
-                    if(changeUseTime > 0)
-                        kLogList.add(KLog.from(kLog.userId, Integer.toString(changeUseTime)));
-                    kLogList.remove(kLog);
+                    if (changeUseTime > 0)
+                        updatedKLogList.add(KLog.from(kLog.userId, Integer.toString(changeUseTime))); // 새로운 로그 추가
+                    else{
+                        updatedKLogList.add(kLog);
+                    }
                 }
             }
-
             // 2. update한 kLog리스트를 sharedData에 적용 - 교체방식
             sharedData.logs.remove(cancelDate);
-            sharedData.logs.put(cancelDate, kLogList);
+            sharedData.logs.put(cancelDate, updatedKLogList);
 
 
             /* 2) 예약목록 삭제 */
