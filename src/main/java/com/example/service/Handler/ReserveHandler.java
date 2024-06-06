@@ -24,6 +24,10 @@ public class ReserveHandler {
 //    Date canceldate = null; //예약 취소 날짜 key
     private List<Reservation> finalCancleList = new ArrayList<>(); //취소 날짜의 예약 목록
 
+    private static final String UNAVAILABLE_TIME_STR = "   ■";
+    private static final String AVAILABLE_TIME_STR = "   □";
+
+
     public ReserveHandler(List<String> dates, String id) {
         this.dates = dates;
         this.ID = id;
@@ -113,22 +117,22 @@ public class ReserveHandler {
 
         //예약 가능 여부 체크
         checkarr = new String[selectKcubeRoomList.size()][13];
-        for(int i = 0; i< selectKcubeRoomList.size(); i++){
-            for(int j=0; j<13; j++){
-                checkarr[i][j] = "   □";  // 모두 선택 '가능'으로 초기화
+        for (int room = 0; room < selectKcubeRoomList.size(); room++) {
+            for (int time = 0; time < 13; time++) {
+                checkarr[room][time] = AVAILABLE_TIME_STR;  // 모두 선택 '가능'으로 초기화
             }
         }
 
-        //todo 호실 문법규칙 수정에 따른 변수, 예외처리 수정
-        List<Reservation> resList = sharedData.reservationList.get(reserveDate);
-        if (resList != null) { // 해당 날짜에 예약 목록이 존재하는 경우
-            for (int i = 0; i < resList.size(); i++) {
-                int resroom = toInt(resList.get(i).room);
-                int resstart = toInt(resList.get(i).startTime);
-                int resuse = toInt(resList.get(i).useTime);
-                for(int j=resstart-9; j<resstart-9+resuse; j++){
-                    checkarr[resroom-1][j] = "   ■";
-                }
+        List<Reservation> reservations = sharedData.reservationList.get(reserveDate);
+        for (Reservation res : reservations) {
+            if (!res.name.equals(reservation.name))
+                continue;
+            int resRoom = toInt(res.room);
+            int resStart = toInt(res.startTime);
+            int resEnd = resStart + toInt(res.useTime);
+            // checkarr 에 예약목록 적용
+            for (int time = resStart - 9; time < resEnd - 9; time++) {
+                checkarr[resRoom - 1][time] = UNAVAILABLE_TIME_STR;
             }
         }
 
