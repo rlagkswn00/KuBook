@@ -394,16 +394,16 @@ public class ReserveHandler {
                 updatedKLogList.add(kLog);
             }
         }
-
         // 2. update한 kLog리스트를 sharedData에 적용 - 교체방식
         sharedData.logs.remove(cancelDate);
         sharedData.logs.put(cancelDate, updatedKLogList);
 
 
-        
-        /* 2) 예약목록 삭제 */
-        sharedData.reservationList.get(cancelDate)
-                .removeIf(reservation->reservation.userIds.contains(pID));
+        /* 2) 예약목록에서 해당 이용자만 삭제 */
+        sharedData.reservationList.get(cancelDate).remove(cancelReservation);
+        cancelReservation.userIds.removeIf(userId -> userId.equals(ID));
+        sharedData.reservationList.get(cancelDate).add(cancelReservation);
+
 
         // 예약 취소 성공 후 - cancelableList에서 삭제
         cancelableList.remove(cancelIdx);
