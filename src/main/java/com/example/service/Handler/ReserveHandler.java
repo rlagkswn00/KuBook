@@ -168,14 +168,15 @@ public class ReserveHandler {
     }
     private void selectRoom(){
         //호실 선택
+        String nroom;
         while(true) {
             System.out.print("예약하실 호실을 선택하세요 (ex. 3) : ");
-            String nroom = sc.nextLine();
-            if(Validation.validateReservationRoomNum(nroom, sharedData.kcubes.size())){
+            nroom = sc.nextLine();
+            if(Validation.validateReservationRoomNum(nroom, selectKcubeRoomList.size())){
                 break;
             }
-            reservation.setRoom(nroom);
         }
+        reservation.setRoom(nroom);
     }
 
     private Integer inputNPeople(){
