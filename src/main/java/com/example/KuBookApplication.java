@@ -1,13 +1,12 @@
 package com.example;
 
 import com.example.fileio.FileManager;
-import com.example.model.*;
+import com.example.model.DataManager;
 import com.example.service.Service;
 import com.example.service.ServiceFactory;
 import lombok.extern.slf4j.Slf4j;
+
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 @Slf4j
 public class KuBookApplication {
@@ -17,7 +16,7 @@ public class KuBookApplication {
         ServiceFactory serviceFactory = new ServiceFactory();
         FileManager.getInstance().load();
         DataManager datamanager = new DataManager();
-        System.out.println(sharedData);
+//        System.out.println(sharedData);
         Service service = serviceFactory.login(datamanager);
         service.menu();
 
