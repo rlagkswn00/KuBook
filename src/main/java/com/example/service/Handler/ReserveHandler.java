@@ -415,7 +415,7 @@ public class ReserveHandler {
      * @param cancelNum 취소하고싶은 번호
      * @param pIDs cancelDate 의 예약자 목록
      */
-    public void allCancel(String cancelNum, List<String> pIDs) throws InterruptedException {
+    public void allCancel(String cancelNum, List<String> pIDs){
         int cancelIdx = toInt(cancelNum) - 1;
         Date cancelDate = getDateByIndexFromCancelableList(cancelIdx);
         Reservation cancelReservation = cancelableList.get(cancelIdx).get(cancelDate);
@@ -431,7 +431,11 @@ public class ReserveHandler {
                     continue;
                 if (cancelStatus.equals("N")) {
                     System.out.println("5초 후 메뉴로 돌아갑니다.\n");
-                    Thread.sleep(5000);
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
                     return;
                 }
                 System.out.println();
@@ -484,7 +488,7 @@ public class ReserveHandler {
     }
 
     /** 예약 취소 함수 */
-    public void cancelReservation() throws InterruptedException {
+    public void cancelReservation(){
         System.out.println("\n[ 건물, 호실, 사용할 날짜, 예약 시작 시간, 이용시간, (학번들) ]");
         int reserveListNum = 1; // 예약 목록 번호
         for(String date : dates){
