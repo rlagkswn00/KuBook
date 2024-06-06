@@ -369,8 +369,42 @@ public class ReserveHandler {
         }
 
     }
-    public void personalCancel(int cancelIdx, Date cancelDate, List<String> pIDs){
-        //todo 개인 예약 취소
+
+    /** 개인 예약 취소
+     * @param cancelIdx cancelableList 에서 cancelDate 에 해당하는 인덱스
+     * @param cancelDate 취소하고싶은 예약 날짜
+     * @param pIDs cancelDate 의 예약자 목록
+     */
+    public void personalCancel(int cancelIdx, Date cancelDate, String pID){
+        Reservation cancelReservation = cancelableList.get(cancelIdx).get(cancelDate);
+
+        /* 1) log 삭제 */
+        List<KLog> kLogList = sharedData.logs.get(cancelDate);
+
+        // 1. kLog 리스트 update(변경 || 삭제) - 교체방식
+        for(KLog kLog : kLogList){
+            if(kLog.userId.equals(pID)){ // pID의 로그
+                int changeUseTime = toInt(kLog.useTime) - toInt(cancelReservation.useTime);
+                if(changeUseTime > 0)
+                    kLogList.add(KLog.from(kLog.userId, Integer.toString(changeUseTime)));
+                kLogList.remove(kLog);
+            }
+        }
+
+        // 2. update한 kLog리스트를 sharedData에 적용 - 교체방식
+        sharedData.logs.remove(cancelDate);
+        sharedData.logs.put(cancelDate, kLogList);
+
+        
+        /* 2) 예약목록 삭제 */
+        sharedData.reservationList.get(cancelDate)
+                .removeIf(reservation->reservation.userIds.contains(pID));
+
+        // 예약 취소 성공 후 - cancelableList에서 삭제
+        cancelableList.remove(cancelIdx);
+        // 취소된 후 사용자의 예약목록 출력
+        printCancelList();
+        System.out.println("취소되었습니다. 5초 후 메뉴로 돌아갑니다.\n");
     }
 
     /** 전체 예약 취소
@@ -493,7 +527,7 @@ public class ReserveHandler {
             else { // 동반 예약자일 경우
                 // 사용자가 예약에서 빠져도 해당 예약의 인원수 제한조건이 충족될 때 - 개인 예약 취소
                 if(toInt(cancelReservation.numOfPeople) > getMinPeople(maxNum)){
-                    personalCancel(cancelIdx, cancelDate, pIDs);
+                    personalCancel(cancelIdx, cancelDate, ID);
                 }
                 else{ // 인원수 제한조건이 충족되지 않는다면 - 전체 예약 취소
                     allCancel(cancelIdx, cancelDate, pIDs);
