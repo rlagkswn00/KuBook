@@ -75,7 +75,8 @@ public class ReserveHandler {
         /* todo 주말 예약 불가 구현 */
         label: while(true) {
             for (int i = 0; i < 8; i++) {
-                System.out.print("(" + i + ") " + dates.get(i) + " ");
+                String curDate = dates.get(i);
+                System.out.print("(" + i + ") " + curDate +"["+ Date.getDayOfWeek(curDate) + "] ");
             }
             System.out.print("\n예약하실 날짜를 선택하세요 (ex. 1) : ");
             reserveDateNum = sc.nextLine();
