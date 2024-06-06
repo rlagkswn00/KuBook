@@ -254,43 +254,46 @@ public class ReserveHandler {
 
     private void inputNUse(){
         //이용 시간 입력
-        String nuse;
-        label:while(true) {
+        String nUse;
+        while(true) {
             System.out.print("이용할 시간을 입력하세요 (1~3시간만 가능) :  ");
-            nuse = sc.nextLine();
-            if(Validation.validateReservationUseTime(nuse)){
-                if((toInt(reservation.startTime)+toInt(nuse))>=23){
-                    System.out.println("K CUBE 마감시간을 넘어갑니다");
-                }else{
-                    boolean useflag = true;
-                    for(int i=1; i<toInt(nuse); i++){
-                        if(checkarr[toInt(reservation.room)-1][toInt(reservation.startTime)-9+i].equals("   ■")){
-                            System.out.println("오류! 예약이 불가한 시간이 포함되어있습니다. 다시 선택해주세요.");
-                            useflag = false;
-                            break;
-                        }
-                    }
+            nUse = sc.nextLine();
+            if(!Validation.validateReservationUseTime(nUse))
+                continue;
 
-                    if(useflag){
-                        if(!sharedData.logs.get(reserveDate).isEmpty()) {
-                            // refactor
-                            for(KLog log : sharedData.logs.get(reserveDate)){
-                                for(String id : reservation.userIds) {
-                                    if(log.userId.equals(id) &&
-                                        ((toInt(log.useTime) + toInt(nuse)) > 3)){
-                                        System.out.println("예약하려는 날짜의 누적 이용시간은 최대 3시간까지 가능합니다. 다시 선택해주세요.");
-                                        continue label;
-                                    }
-                                }
-                            }
-                        }
-                        break;
-                    }
+            if((toInt(reservation.startTime)+toInt(nUse))>=23){
+                printErrorMessage("K-CUBE 마감시간을 넘어갑니다");
+                continue;
+            }
+
+            boolean flag = true;
+            for(int i=1; i < toInt(nUse); i++){
+                if(isTimeForbidden(toInt(reservation.room), toInt(reservation.startTime) + i)){
+                    printErrorMessage("오류! 예약이 불가한 시간이 포함되어있습니다. 다시 선택해주세요.");
+                    flag = false;
+                    break;
                 }
             }
+            if(!flag) continue;
+
+            // 로그가 없으면 누적이용시간 확인 필요 x
+            if(sharedData.logs.get(reserveDate).isEmpty()) break;
+
+            // 누적 이용시간 확인
+            for(String id : reservation.userIds) {
+                if(Validation.checkNHoursUsage(reserveDate, id, 4 - toInt(nUse))){
+                    printErrorMessage("예약하려는 날짜의 누적 이용시간은 최대 3시간까지 가능합니다. 다시 선택해주세요.");
+                    flag = false;
+                    break;
+                }
+            }
+
+            if(!flag) continue;
+
+            break;
         }
 
-        reservation.setUseTime(nuse);
+        reservation.setUseTime(nUse);
     }
 
     public void makeReservation(){
