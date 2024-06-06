@@ -2,6 +2,7 @@ package com.example.utils;
 
 import com.example.SharedData;
 import com.example.model.Date;
+import com.example.model.KLog;
 import com.example.model.PenaltyUser;
 import lombok.extern.slf4j.Slf4j;
 
@@ -10,6 +11,7 @@ import java.io.IOException;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Slf4j
 public class Validation {
@@ -273,37 +275,36 @@ public class Validation {
                 printErrorMessage("예약하실 호실이 올바르지 않습니다.");
                 return false;
             }
-//            selectedRoomNum=intReservationRoomNum;
-            return true;
         }catch(NumberFormatException e) {
             printErrorMessage("예약하실 호실은 숫자로 이루어져야 합니다.");
             return false;
         }
-//        return true;
+        return true;
     }
 
-    public static boolean validateSelfExcludedTotMemberNumber(String selfExcludedTotMemberNumber,int maxRoomCapacity){
-        if(selfExcludedTotMemberNumber==null){
-            printErrorMessage("selfExcludedTotMemberNumber is null");
+    public static boolean validateReservationSize(String nmates, int maxPeople, int minPeople){
+        if(nmates==null){
+            printErrorMessage("nmates is null");
             return false;
         }
 
-        if (!selfExcludedTotMemberNumber.matches("\\d+")) {
-            printErrorMessage("본인을 제외한 전체 예약 인원 수는 숫자로만 이루어져야 합니다.");
+        if (!nmates.matches("\\d+")) {
+            printErrorMessage("입력하신 인원수는 숫자로 이루어져야 합니다.");
             return false;
         }
         /*최소 인원수 만족 예외처리*/
         try{
-            int intSelfExcludedTotMemberNumber = Integer.parseInt(selfExcludedTotMemberNumber);
-            if(intSelfExcludedTotMemberNumber > maxRoomCapacity || intSelfExcludedTotMemberNumber <=0){
-                printErrorMessage("입력하신 인원 수가 올바르지 않습니다.");
+            int intNmates = Integer.parseInt(nmates);
+            if(intNmates >= maxPeople || intNmates < minPeople - 1){
+                printErrorMessage("입력하신 인원수가 올바르지 않습니다.");
                 return false;
             }
         }catch(NumberFormatException e){
-            printErrorMessage("입력하신 인원 수는 숫자로 이루어져야 합니다.");
+            printErrorMessage("입력하신 인원수는 숫자로 이루어져야 합니다.");
             return false;
         }
         return true;
+
     }
 
     public static boolean validateCancelNum(String cancelNum,int maxCancelNum){
@@ -338,9 +339,9 @@ public class Validation {
         return false;
     }
 
-    public static boolean validateReservationStartTime(String reservedate, String reservationStartTime){
-        if(reservationStartTime == null || reservedate == null){
-            printErrorMessage("prarameter is null");
+    public static boolean validateReservationStartTime(String reserveDate, String reservationStartTime){
+        if(reservationStartTime == null || reserveDate == null){
+            printErrorMessage("pararameter is null");
             return false;
         }
         
@@ -355,7 +356,7 @@ public class Validation {
                 printErrorMessage("입력하신 예약시작 시간이 올바르지 않습니다.");
                 return false;
             }
-            boolean isCurDate = Integer.parseInt(reservedate) == 0;
+            boolean isCurDate = Integer.parseInt(reserveDate) == 0;
             if(isCurDate){
                 if(sharedData.currentTime.getHour() > intReservationStartTime) {
                     printErrorMessage("현재시간 이전의 시간은 예약이 불가합니다.");
