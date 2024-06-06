@@ -465,8 +465,7 @@ public class ReserveHandler {
 
 
             /* 2) 예약목록 삭제 */
-            sharedData.reservationList.get(cancelDate)
-                    .removeIf(reservation->reservation.userIds.contains(pID));
+            sharedData.reservationList.get(cancelDate).remove(cancelReservation);
 
             /* 3) 당일이면 패널티 부여 */
             if(today){
