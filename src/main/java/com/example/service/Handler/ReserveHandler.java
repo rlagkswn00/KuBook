@@ -38,6 +38,12 @@ public class ReserveHandler {
     private String getDateByIndex(String idx){
         return dates.get(Integer.parseInt(idx));
     }
+
+    /** @return 예약 불가 시간인가? */
+    private boolean isTimeForbidden(int RoomNum, int StartTime){
+        return checkarr[RoomNum - 1][StartTime-9].equals(UNAVAILABLE_TIME_STR);
+    }
+
     private boolean isToday(Date targetDate){
         return Validation.isSameDate(targetDate, dates.get(0));
     }
@@ -230,21 +236,20 @@ public class ReserveHandler {
     }
 
     private void inputNStart(){
-        String nstart;
-        //시작 시간 입력
+        String nStart;
+        // 시작 시간 입력
         while(true) {
             System.out.print("예약 시작 시간을 입력하세요 (ex. 12) :  ");
-            nstart = sc.nextLine();
-            // todo 사용불가 -> 예약 불가능 예외처리
-            if(Validation.validateReservationStartTime(reserveDate.date, nstart)){
-                if(checkarr[toInt(reservation.room) - 1][toInt(nstart)-9].equals("   ■")){
-                    System.out.println("오류! 예약이 불가한 시간입니다.");
+            nStart = sc.nextLine();
+            if(Validation.validateReservationStartTime(reserveDate.date, nStart)){
+                if(isTimeForbidden(toInt(reservation.room), toInt(nStart))){
+                    printErrorMessage("오류! 예약이 불가한 시간입니다.");
                 }else{
                     break;
                 }
             }
         }
-        reservation.setStartTime(nstart);
+        reservation.setStartTime(nStart);
     }
 
     private void inputNUse(){
