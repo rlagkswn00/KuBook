@@ -95,6 +95,10 @@ public class ReserveHandler {
                 continue;
 
             chosenDateStr = getDateByIndex(chosenDateIndex);
+            if(Validation.isWeekend(chosenDateStr)){
+                printErrorMessage("주말은 예약 불가합니다.");
+                continue;
+            }
 
             chosenDate = new Date(chosenDateStr);
             // 패널티 대상자 처리

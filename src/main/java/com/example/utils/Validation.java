@@ -412,4 +412,13 @@ public class Validation {
         }
         return true;
     }
+
+    public static boolean isWeekend(String dateStr) {
+        if(dateStr==null){
+            printErrorMessage("dateStr is null");
+        }
+        String dayOfWeek = Date.getDayOfWeek(dateStr);
+        // 주말인지 확인
+        return dayOfWeek.equals("토") || dayOfWeek.equals("일");
+    }
 }
