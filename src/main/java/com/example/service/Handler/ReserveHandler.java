@@ -345,8 +345,7 @@ public class ReserveHandler {
                         if(res.userIds.contains(ID)){
                             System.out.print(res.name+", "+res.room+"호실, "
                                     + date + ", "+res.startTime+"시, "+res.useTime+"h, ");
-                            List<String> others = res.userIds;
-                            printIDs(others, ID);
+                            printIDs(res.userIds);
                         }
                     }
                     reserveflag = false;
@@ -498,7 +497,7 @@ public class ReserveHandler {
                     if(res.userIds.contains(ID)){
                         System.out.print(reserveListNum+". "+res.name+", "+res.room+"호실, "
                                 + date + ", "+res.startTime+"시, "+res.useTime+"h, ");
-                        printIDs(res.userIds, ID);
+                        printIDs(res.userIds);
                         cancelableList.add(new HashMap<>(){{put(new Date(date), res);}});
                         reserveListNum++;
                     }
@@ -557,18 +556,10 @@ public class ReserveHandler {
         return cancelDate;
     }
 
-    public void printIDs(List<String> s, String ID){
-        //학번 출력 방식
-        System.out.print("(");
-        boolean flag = true;
-        for(int i=0; i<s.size(); i++){
-            if(s.get(i).equals(ID));
-            else{
-                if(flag) {System.out.print(s.get(i)); flag = false;}
-                else System.out.print(", "+s.get(i));
-            }
-        }
-        System.out.print(")\n");
+    public void printIDs(List<String> pIDs){
+        System.out.println(
+                pIDs.stream()
+                .collect(Collectors.joining(", ", "(", ")")));
     }
 
     private void printCancelList() {
@@ -581,7 +572,7 @@ public class ReserveHandler {
             Reservation printRes = cancelableList.get(i).get(printDate);
             System.out.print((i+1)+". "+ printRes.name+", "+ printRes.room+"호실, "
                     + printDate.date+", "+ printRes.startTime+"시, "+ printRes.useTime+"h, ");
-            printIDs(printRes.userIds, ID);
+            printIDs(printRes.userIds);
         }
     }
 
