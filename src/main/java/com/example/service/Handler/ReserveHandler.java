@@ -180,14 +180,16 @@ public class ReserveHandler {
     }
 
     private Integer inputNPeople(){
+        /* nmates = 본인을 미포함한 동반이용자 인원수 */
         String nMates;
+
         //인원수 선택
         while(true) {
-            System.out.print("본인을 제외한 전체 예약 인원수를 입력하세요 (ex. 3) : "); // todo 최소~최대 인원수 출력
-            // TODO :
+            int maxPeople = getMaxPeople(reservation.name, reservation.room);
+            int minPeople = getMinPeople(maxPeople);
+            System.out.print("본인을 제외한 전체 예약 인원수를 입력하세요 (ex. "+(minPeople-1)+" ~ "+(maxPeople-1)+") : ");
             nMates = sc.nextLine();
-            if(Validation.validateSelfExcludedTotMemberNumber(nMates,
-                    toInt(sharedData.kcubes.get(toInt(reservation.room)-1).max)-1)) {
+            if(Validation.validateReservationSize(nMates, maxPeople, minPeople)) {
                 break;
             }
         }
