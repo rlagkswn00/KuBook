@@ -512,14 +512,20 @@ public class ReserveHandler {
 
             finalCancleList = sharedData.reservationList.get(cancelDate); // 취소할 날짜의 모든 예약 목록 백업
 
-            if(toInt(selectedReservation.numOfPeople) > getMinPeople(maxNum)){
-                personalCancel(cancelNum, cancelDate, pIDs); //개인 예약 취소
-            }
-            else{
-                allCancel(cancelNum, cancelDate, pIDs); //전체 예약 취소
             List<String> pIDs = cancelReservation.userIds; // 취소할 날짜의 예약자 학번들
             int maxNum = getMaxPeople(cancelReservation.name, cancelReservation.room);
 
+            // 예약자 본인일 경우 - 전체 예약 취소
+            if(ID.equals(pIDs.get(0)))
+                allCancel(cancelIdx, cancelDate, pIDs);
+            else { // 동반 예약자일 경우
+                // 사용자가 예약에서 빠져도 해당 예약의 인원수 제한조건이 충족될 때 - 개인 예약 취소
+                if(toInt(cancelReservation.numOfPeople) > getMinPeople(maxNum)){
+                    personalCancel(cancelIdx, cancelDate, pIDs);
+                }
+                else{ // 인원수 제한조건이 충족되지 않는다면 - 전체 예약 취소
+                    allCancel(cancelIdx, cancelDate, pIDs);
+                }
             }
         }
         try {
