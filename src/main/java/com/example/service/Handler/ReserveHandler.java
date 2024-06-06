@@ -473,8 +473,8 @@ public class ReserveHandler {
         }
     }
 
-    public void cancelReservation(){
-        // 예약 취소
+    /** 예약 취소 함수 */
+    public void cancelReservation() throws InterruptedException {
         System.out.println("\n[ 건물, 호실, 사용할 날짜, 예약 시작 시간, 이용시간, (학번들) ]");
         int reserveListNum = 1; // 예약 목록 번호
         for(String date : dates){
@@ -483,9 +483,8 @@ public class ReserveHandler {
                 for(Reservation res : reserveList){
                     if(res.userIds.contains(ID)){
                         System.out.print(reserveListNum+". "+res.name+", "+res.room+"호실, "
-                                + date+", "+res.startTime+"시, "+res.useTime+"h, ");
-                        List<String> others = res.userIds;
-                        printIDs(others, ID);
+                                + date + ", "+res.startTime+"시, "+res.useTime+"h, ");
+                        printIDs(res.userIds, ID);
                         cancelableList.add(new HashMap<>(){{put(new Date(date), res);}});
                         reserveListNum++;
                     }
@@ -505,21 +504,22 @@ public class ReserveHandler {
                 }
             }
 
-            int index = toInt(cancelNum) - 1;  // 인덱스
-            Map<Date, Reservation> selectedMap = cancelableList.get(index);
-            cancelDate = selectedMap.keySet().iterator().next();
-            Reservation selectedReservation = selectedMap.get(cancelDate);
+            int cancelIdx = toInt(cancelNum) - 1;  // 인덱스
+            cancelDate = getDateByIndexFromCancelableList(cancelIdx);
 
+            // cancelableList로부터 cancelDate에 해당하는 Reservation 추출
+            Reservation cancelReservation = cancelableList.get(cancelIdx).get(cancelDate);
 
-            finalCancleList = sharedData.reservationList.get(cancelDate); // 취소 날짜의 예약 목록
-            List<String> pIDs = selectedReservation.userIds; // 선택한 날짜의 예약자 학번들
-            int maxNum = getMaxPeople(selectedReservation.name, selectedReservation.room);
+            finalCancleList = sharedData.reservationList.get(cancelDate); // 취소할 날짜의 모든 예약 목록 백업
 
             if(toInt(selectedReservation.numOfPeople) > getMinPeople(maxNum)){
                 personalCancel(cancelNum, cancelDate, pIDs); //개인 예약 취소
             }
             else{
                 allCancel(cancelNum, cancelDate, pIDs); //전체 예약 취소
+            List<String> pIDs = cancelReservation.userIds; // 취소할 날짜의 예약자 학번들
+            int maxNum = getMaxPeople(cancelReservation.name, cancelReservation.room);
+
             }
         }
         try {
