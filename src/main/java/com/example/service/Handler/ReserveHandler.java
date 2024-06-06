@@ -371,11 +371,15 @@ public class ReserveHandler {
     }
 
     /** 개인 예약 취소
-     * @param cancelIdx cancelableList 에서 cancelDate 에 해당하는 인덱스
-     * @param cancelDate 취소하고싶은 예약 날짜
-     * @param pID 개인 예약 취소할 유저의 id
+     * @param cancelNum 취소하고싶은 번호
+     * @param pIDs cancelDate 의 예약자 목록
      */
-    public void personalCancel(int cancelIdx, Date cancelDate, String pID){
+    public void personalCancel(String cancelNum, List<String> pIDs){
+
+        int cancelIdx = toInt(cancelNum) - 1;
+        Date cancelDate = getDateByIndexFromCancelableList(cancelIdx);
+        String pID = ID;
+
         Reservation cancelReservation = cancelableList.get(cancelIdx).get(cancelDate);
 
         /* 1) log 삭제 */
@@ -408,12 +412,12 @@ public class ReserveHandler {
     }
 
     /** 전체 예약 취소
-     * @param cancelDate 취소하고싶은 예약 날짜
-     * @param cancelIdx cancelableList 에서 cancelDate 에 해당하는 인덱스
+     * @param cancelNum 취소하고싶은 번호
      * @param pIDs cancelDate 의 예약자 목록
      */
-    public void allCancel(int cancelIdx, Date cancelDate, List<String> pIDs) throws InterruptedException {
-
+    public void allCancel(String cancelNum, List<String> pIDs) throws InterruptedException {
+        int cancelIdx = toInt(cancelNum) - 1;
+        Date cancelDate = getDateByIndexFromCancelableList(cancelIdx);
         Reservation cancelReservation = cancelableList.get(cancelIdx).get(cancelDate);
 
         boolean today = false; // 당일 여부
@@ -523,14 +527,14 @@ public class ReserveHandler {
 
             // 예약자 본인일 경우 - 전체 예약 취소
             if(ID.equals(pIDs.get(0)))
-                allCancel(cancelIdx, cancelDate, pIDs);
+                allCancel(cancelNum, pIDs);
             else { // 동반 예약자일 경우
                 // 사용자가 예약에서 빠져도 해당 예약의 인원수 제한조건이 충족될 때 - 개인 예약 취소
                 if(toInt(cancelReservation.numOfPeople) > getMinPeople(maxNum)){
-                    personalCancel(cancelIdx, cancelDate, ID);
+                    personalCancel(cancelNum, pIDs);
                 }
                 else{ // 인원수 제한조건이 충족되지 않는다면 - 전체 예약 취소
-                    allCancel(cancelIdx, cancelDate, pIDs);
+                    allCancel(cancelNum, pIDs);
                 }
             }
         }
