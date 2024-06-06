@@ -195,51 +195,40 @@ public class ReserveHandler {
         }
         return toInt(nMates);
     }
+
+    /** 동반 예약자 입력 함수
+     * @param nmates 동반예약자수 (본인 미포함) */
     private void inputMatesIDs(Integer nmates){
         List<String> reserveIDs = new ArrayList<>();
         reserveIDs.add(ID); // ID = 예약자
+        int i = 0;
         // 동반 예약자 입력
-        for(int i=0; i<nmates;) {
-            label:
-            while (true) {
-                System.out.print(i + 1 + "번째 동반 예약자의 학번을 입력하세요 (ex. 202011111) : ");
-                String nthID = sc.nextLine();
-
-                if (Validation.validateUserId(nthID)) {
-                    if (reserveIDs.contains(nthID)) {
-                        System.out.println("이미 등록한 예약자의 학번입니다.");
-                    } else {
-                        if (reserveDate.date.equals(sharedData.currentTime.date) && sharedData.penalizedUsers.get(reserveDate) != null) {
-                            for (int j = 0; j < sharedData.penalizedUsers.get(reserveDate).size(); j++) {
-                                if (sharedData.penalizedUsers.get(reserveDate).get(j).userId.equals(nthID)) {
-                                    System.out.println("패널티가 있는 예약자의 학번입니다.");
-                                    continue label;
-                                }
-                            }
-                            reserveIDs.add(nthID);
-                            i++;
-                        } else {
-                            if (sharedData.logs.get(reserveDate) != null) {
-                                for (int j = 0; j < sharedData.logs.get(reserveDate).size(); j++) {
-                                    if (sharedData.logs.get(reserveDate).get(j).userId.equals(nthID)) {
-                                        if (toInt(sharedData.logs.get(reserveDate).get(j).useTime) >= 3) {
-                                            System.out.println("동반 예약자의 누적 이용시간은 3시간이므로 예약하실 수 없습니다.");
-                                            continue label;
-                                        }
-                                    }
-                                }
-                            }
-                            reserveIDs.add(nthID);
-                            i++;
-                        }
-                    }
-                }
-                if (i == nmates) break;
+        while(i != nmates){
+            System.out.print((i + 1) + "번째 동반 예약자의 학번을 입력하세요 (ex. 202011111) : ");
+            String nthID = sc.nextLine();
+            if(!Validation.validateUserId(nthID)) continue;
+            /* 동반이용자 - 이미 등록한 예약자 확인 */
+            if (reserveIDs.contains(nthID)) {
+                printErrorMessage("이미 등록한 예약자의 학번입니다.");
+                continue;
             }
+            /* 동반이용자 - 패널티 확인 */
+            if (isToday(reserveDate) && Validation.isPenaltyUser(reserveDate, nthID)){
+                printErrorMessage("패널티가 있는 예약자의 학번입니다.");
+                continue;
+            }
+            /* 동반이용자 - 누적시간 확인 */
+            if(Validation.checkNHoursUsage(reserveDate, nthID, 3)){
+                printErrorMessage("동반 예약자의 누적 이용시간은 3시간이므로 예약하실 수 없습니다.");
+                continue;
+            }
+            reserveIDs.add(nthID);
+            i++;
         }
         reservation.setNumOfPeople(Integer.toString(nmates + 1));
         reservation.setUserIds(reserveIDs);
     }
+
     private void inputNStart(){
         String nstart;
         //시작 시간 입력
