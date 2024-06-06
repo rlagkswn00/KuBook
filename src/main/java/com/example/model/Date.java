@@ -3,6 +3,13 @@ package com.example.model;
 import com.example.utils.Validation;
 import lombok.Data;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+
+import static com.example.utils.Validation.printErrorMessage;
+
 @Data
 public class Date {
     public String date;
@@ -75,5 +82,27 @@ public class Date {
             }
         }
         return false;
+    }
+
+    public static String getDayOfWeek(String dateStr){
+        DayOfWeek dayOfWeek = null;
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+            LocalDate date = LocalDate.parse(dateStr, formatter);
+            dayOfWeek = date.getDayOfWeek();
+        } catch (DateTimeParseException e) {
+            printErrorMessage("Invalid date format: " + dateStr);
+            return null;
+        }
+
+        return switch (dayOfWeek) {
+            case MONDAY -> "월";
+            case TUESDAY -> "화";
+            case WEDNESDAY -> "수";
+            case THURSDAY -> "목";
+            case FRIDAY -> "금";
+            case SATURDAY -> "토";
+            case SUNDAY -> "일";
+        };
     }
 }
