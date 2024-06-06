@@ -73,7 +73,7 @@ public class ReserveHandler {
             for(int i = 0; i < totalBuildingNum; i++) {
                 System.out.print((i+1)+". "+ kcubeList.get(i));
             }
-            System.out.print("예약하실 건물을 선택하세요 (ex. 1) : ");
+            System.out.print("\n예약하실 건물을 선택하세요 (ex. 1) : ");
             String kcubeNum = sc.nextLine();
             if(Validation.validateBuildingNum(kcubeNum, totalBuildingNum)){
                 reservation.setName(kcubeList.get(toInt(kcubeNum)-1)); // 건물 이름 set
@@ -152,15 +152,17 @@ public class ReserveHandler {
 
         // 관리자 설정 파일 적용
         List<DisableKcube> disableKcubes = sharedData.disableKcubes.get(reserveDate);
-        for (DisableKcube kcube : disableKcubes) {
-            if(!kcube.name.equals(reservation.name))
-                continue;
-            int kcubeRoom = toInt(kcube.room);
-            int kcubeStartTime = toInt(kcube.startTime);
-            int kcubeEndTime = toInt(kcube.endTime);
-            // checkarr 에 예약불가목록 적용
-            for (int time = kcubeStartTime - 9; time < kcubeEndTime - 9; time++) {
-                checkarr[kcubeRoom - 1][time] = UNAVAILABLE_TIME_STR;
+        if(disableKcubes!=null) {
+            for (DisableKcube kcube : disableKcubes) {
+                if (!kcube.name.equals(reservation.name))
+                    continue;
+                int kcubeRoom = toInt(kcube.room);
+                int kcubeStartTime = toInt(kcube.startTime);
+                int kcubeEndTime = toInt(kcube.endTime);
+                // checkarr 에 예약불가목록 적용
+                for (int time = kcubeStartTime - 9; time < kcubeEndTime - 9; time++) {
+                    checkarr[kcubeRoom - 1][time] = UNAVAILABLE_TIME_STR;
+                }
             }
         }
         //예약 가능 테이블 출력
