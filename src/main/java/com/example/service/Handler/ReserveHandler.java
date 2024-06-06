@@ -373,7 +373,7 @@ public class ReserveHandler {
     /** 개인 예약 취소
      * @param cancelIdx cancelableList 에서 cancelDate 에 해당하는 인덱스
      * @param cancelDate 취소하고싶은 예약 날짜
-     * @param pIDs cancelDate 의 예약자 목록
+     * @param pID 개인 예약 취소할 유저의 id
      */
     public void personalCancel(int cancelIdx, Date cancelDate, String pID){
         Reservation cancelReservation = cancelableList.get(cancelIdx).get(cancelDate);
