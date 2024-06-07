@@ -16,7 +16,6 @@ public class KuBookApplication {
         ServiceFactory serviceFactory = new ServiceFactory();
         FileManager.getInstance().load();
         DataManager datamanager = new DataManager();
-//        System.out.println(sharedData);
         Service service = serviceFactory.login(datamanager);
         service.menu();
 

@@ -1,5 +1,6 @@
 package com.example.model;
 
+import com.example.SharedData;
 import com.example.utils.Validation;
 import lombok.Data;
 
@@ -59,28 +60,28 @@ public class Date {
     }
 
     //인자값보다 this 시간이 이후이면 true, 아니면 false
-    public boolean isAfterFrom(Date date) {
+    public boolean isAfterNow() {
         int thisDate = Integer.parseInt(this.date);
         int thisTime = 0;
         if (this.time != null) {
             thisTime = Integer.parseInt(this.time);
         }
-
-        int argDate = Integer.parseInt(date.getDate());
-        int argTime = 0;
-        if (this.time != null) {
-            argTime = Integer.parseInt(date.getTime());
+        Date currentTime = SharedData.getInstance().currentTime;
+        int curDate = Integer.parseInt(currentTime.getDate());
+        int curTime = 0;
+        if (currentTime.getTime() != null) {
+            curTime = Integer.parseInt(currentTime.getTime());
         }
-        if (thisDate > argDate) {
+        if (thisDate > curDate) {
+            System.out.println("!");
             return true;
         }
-        if (thisTime != 0 && argTime != 0) {
-            if (thisDate == argDate) {
-                if (thisTime >= argTime) {
-                    return true;
-                }
-            }
+        if (thisDate == curDate) {
+            System.out.println("@");
+            System.out.println(curTime + " " + thisTime);
+            return thisTime >= curTime;
         }
+        System.out.println("#");
         return false;
     }
 

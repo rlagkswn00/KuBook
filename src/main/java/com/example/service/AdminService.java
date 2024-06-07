@@ -3,8 +3,10 @@ package com.example.service;
 import com.example.SharedData;
 import com.example.fileio.FileManager;
 import com.example.service.Handler.AdminHandler;
+import com.example.utils.Validation;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -13,24 +15,19 @@ public class AdminService extends Service {
     private final Scanner sc = new Scanner(System.in);
     SharedData sharedData = SharedData.getInstance();
 
-    public AdminService(List<String> dates, String id){
-        super(dates,id);
+    public AdminService(List<String> dates, String id) {
+        super(dates, id);
     }
 
     @Override
     public void menu() throws IOException {
         Scanner sc = new Scanner(System.in);
-        while(true) {
-            // todo 메뉴 목록 출력 코드 작성
+        while (true) {
+            System.out.println("1. 사용불가 설정 2. 건물/호실 추가 및 삭제 3. 최대인원수 설정 4. 종료하기");
+            System.out.println("메뉴를 선택하세요 (ex. 1) :");
             String menu = sc.nextLine();
             switch (menu) {
                 case "1":
-                    System.out.println("\n...선택한 메뉴 창으로 이동...\n");
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
                     adminMenu1_setUnavailable();
                     break;
                 case "2":
@@ -55,27 +52,50 @@ public class AdminService extends Service {
 
     public void adminMenu1_setUnavailable() {
         // 사용 불가 설정
+        System.out.println("\n...선택한 메뉴 창으로 이동...\n");
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         adminHandler.disableRoom();
     }
 
     public void adminMenu2_updateBuildingAndRooms() {
-        //todo 건물/ 호실 추가 및 삭제 선택 메뉴 작성
+        System.out.println("1. 건물 추가 2. 건물 삭제 3. 호실 추가 4. 호실 삭제");
+        System.out.print("메뉴를 선택하세요 (ex. 1) : ");
+        String[] menus = {"1","2","3","4"};
+        while (true) {
+            String menu = sc.nextLine();
+            boolean isValidInput = Arrays.asList(menus).contains(menu);
+            if (!isValidInput) {
+                System.out.println("오류! 메뉴에 없는 입력입니다. 다시 입력해주세요.\n");
+                continue;
+            }
+            System.out.println("\n...선택한 메뉴 창으로 이동...\n");
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
 
-        // 대응하는 일들
-        if(){
-            adminHandler.addBuilding();
+            if (menu.equals("1")) {
+                adminHandler.addBuilding();
+                break;
+            }
+            if (menu.equals("2")) {
+                adminHandler.deleteBuilding();
+                break;
+            }
+            if (menu.equals("3")) {
+                adminHandler.addRoom();
+                break;
+            }
+            if (menu.equals("4")) {
+                adminHandler.deleteRoom();
+                break;
+            }
         }
-        if(){
-            adminHandler.addRoom();
-        }
-        if(){
-            adminHandler.deleteBuilding();
-        }
-        if(){
-            adminHandler.deleteRoom();
-        }
-
-
     }
 
     public void adminMenu3_setMaxPeople() {

@@ -49,6 +49,7 @@ public class FileManager {
         saveManager.saveLog();
         saveManager.saveReservation();
         saveManager.saveDisableKcube();
+        saveManager.saveKcube();
 //        log.info("save 성공");
     }
 
