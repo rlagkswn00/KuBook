@@ -22,6 +22,7 @@ import static com.example.fileio.FilePath.CURRENT_TIME_TXT;
 import static com.example.fileio.FilePath.DATA_DIR;
 import static com.example.fileio.FilePath.DISABLE_KCUBE_TXT;
 import static com.example.fileio.FilePath.ETC_DIR;
+import static com.example.fileio.FilePath.KCUBE_TXT;
 import static com.example.fileio.FilePath.LOG_DIR;
 import static com.example.fileio.FilePath.RESERVATION_DIR;
 
@@ -149,12 +150,26 @@ public class SaveManager {
 
         Set<Date> dates = sharedData.disableKcubes.keySet();
         for (Date date : dates) {
-            if (date.isAfterFrom(sharedData.currentTime)) {
+//            if (date.isAfterNow()) {
                 disableKcubes.addAll(sharedData.disableKcubes.get(date));
-            }
+//            }
         }
         writeModelsToFile(file, disableKcubes);
     }
+
+    public void saveKcube() throws IOException {
+        File etcDir = new File(ETC_DIR);
+        Validation.existDir(etcDir);
+        // 패널티 파일 찾아서 삭제
+        Arrays.stream(etcDir.listFiles())
+                .filter(file -> file.getName().startsWith("kcube.txt"))
+                .findFirst().ifPresent(File::delete);
+
+        File file = new File(KCUBE_TXT);
+        Validation.existFile(file);
+        writeModelsToFile(file, sharedData.kcubes);
+    }
+
     /**
      * model들을 file에 쓰는 작업을 담당
      *
