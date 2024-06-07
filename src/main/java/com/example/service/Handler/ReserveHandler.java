@@ -412,7 +412,7 @@ public class ReserveHandler {
         cancelableList.remove(cancelIdx);
         // 취소된 후 사용자의 예약목록 출력
         printCancelList();
-        System.out.println("취소되었습니다. 5초 후 메뉴로 돌아갑니다.\n");
+        System.out.println("사용자 개인 예약이 취소되었습니다. 5초후 메인 화면으로 돌아갑니다.");
     }
 
     /** 전체 예약 취소
@@ -434,12 +434,7 @@ public class ReserveHandler {
                 if (!Validation.validateSameDayCanceling(cancelStatus))
                     continue;
                 if (cancelStatus.equals("N")) {
-                    System.out.println("5초 후 메뉴로 돌아갑니다.\n");
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
+                    System.out.println("5초 후 메인 화면으로 돌아갑니다.\n");
                     return;
                 }
                 System.out.println();
@@ -485,30 +480,20 @@ public class ReserveHandler {
         // 취소된 후 사용자의 예약목록 출력
         printCancelList();
 
+        String printMessage = "취소되었습니다.";
         if(today)
-            System.out.println("예약이 취소되었습니다. 당일 이용이 불가합니다.\n5초 후 메뉴로 돌아갑니다.\n");
-        else
-            System.out.println("취소되었습니다. 5초 후 메뉴로 돌아갑니다.\n");
+            printMessage += " 당일 이용이 불가합니다.";
+        if(!pIDs.get(0).equals(ID))
+            printMessage +=" 최소예약인원수 부적합으로 전체 예약이 삭제됩니다.";
+
+        System.out.println(printMessage + " 5초 후 메인 화면으로 돌아갑니다.");
     }
 
     /** 예약 취소 함수 */
     public void cancelReservation(){
         System.out.println("\n[ 건물, 호실, 사용할 날짜, 예약 시작 시간, 이용시간, (학번들) ]");
-        int reserveListNum = 1; // 예약 목록 번호
-        for(String date : dates){
-            List<Reservation> reserveList = sharedData.reservationList.get(new Date(date));
-            if(!reserveList.isEmpty()){
-                for(Reservation res : reserveList){
-                    if(res.userIds.contains(ID)){
-                        System.out.print(reserveListNum+". "+res.name+", "+res.room+"호실, "
-                                + date + ", "+res.startTime+"시, "+res.useTime+"h, ");
-                        printIDs(res.userIds);
-                        cancelableList.add(new HashMap<>(){{put(new Date(date), res);}});
-                        reserveListNum++;
-                    }
-                }
-            }
-        }
+        loadAndPrintCancelList();
+
         if(cancelableList.isEmpty()){
             System.out.println("예약 목록이 없습니다. 5초 후 메뉴로 돌아갑니다.");
         }else {
@@ -550,6 +535,25 @@ public class ReserveHandler {
             Thread.sleep(5000);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private void loadAndPrintCancelList() {
+        cancelableList = new ArrayList<>();
+        int reserveListNum = 1; // 예약 목록 번호
+        for(String date : dates){
+            List<Reservation> reserveList = sharedData.reservationList.get(new Date(date));
+            if(!reserveList.isEmpty()){
+                for(Reservation res : reserveList){
+                    if(res.userIds.contains(ID)){
+                        System.out.print(reserveListNum +". "+res.name+", "+res.room+"호실, "
+                                + date + ", "+res.startTime+"시, "+res.useTime+"h, ");
+                        printIDs(res.userIds);
+                        cancelableList.add(new HashMap<>(){{put(new Date(date), res);}});
+                        reserveListNum++;
+                    }
+                }
+            }
         }
     }
 
