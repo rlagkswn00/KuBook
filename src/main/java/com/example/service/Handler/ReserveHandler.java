@@ -481,12 +481,8 @@ public class ReserveHandler {
         printCancelList();
 
         String printMessage = "취소되었습니다.";
-        if(today)
-            printMessage += " 당일 이용이 불가합니다.";
-        if(!pIDs.get(0).equals(ID))
-            printMessage +=" 최소예약인원수 부적합으로 전체 예약이 삭제됩니다.";
-
-        System.out.println(printMessage + " 5초 후 메인 화면으로 돌아갑니다.");
+        if(today) printMessage += " 당일 이용이 불가합니다.";
+        System.out.println(printMessage + " 최소예약인원수 부적합으로 전체 예약이 삭제됩니다. 5초 후 메인 화면으로 돌아갑니다.");
     }
 
     /** 예약 취소 함수 */
@@ -518,10 +514,10 @@ public class ReserveHandler {
             List<String> pIDs = cancelReservation.userIds; // 취소할 날짜의 예약자 학번들
             int maxNum = getMaxPeople(cancelReservation.name, cancelReservation.room);
 
-            // 예약자 본인일 경우 - 전체 예약 취소
-            if(ID.equals(pIDs.get(0)))
-                allCancel(cancelNum, pIDs);
-            else { // 동반 예약자일 경우
+//            // 예약자 본인일 경우 - 전체 예약 취소
+//            if(ID.equals(pIDs.get(0)))
+//                allCancel(cancelNum, pIDs);
+//            else { // 동반 예약자일 경우
                 // 사용자가 예약에서 빠져도 해당 예약의 인원수 제한조건이 충족될 때 - 개인 예약 취소
                 if(toInt(cancelReservation.numOfPeople) > getMinPeople(maxNum)){
                     personalCancel(cancelNum, pIDs);
@@ -529,7 +525,7 @@ public class ReserveHandler {
                 else{ // 인원수 제한조건이 충족되지 않는다면 - 전체 예약 취소
                     allCancel(cancelNum, pIDs);
                 }
-            }
+//            }
         }
         try {
             Thread.sleep(5000);
