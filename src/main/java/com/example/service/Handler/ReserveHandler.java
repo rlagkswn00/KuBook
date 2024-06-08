@@ -355,18 +355,18 @@ public class ReserveHandler {
             }
             if(reserveflag){
                 System.out.println("예약목록이 없습니다.");
-
             }
             Scanner sc = new Scanner(System.in);
-            System.out.print("처음으로 돌아가려면 B를 입력하세요. (ex. B) : ");
-            String Back = sc.nextLine();
-            if(Back.equals("B")) {
-                System.out.println("\n처음으로 돌아갑니다.\n");
-                break;
+            String Back;
+            while(true) {
+                System.out.print("처음으로 돌아가려면 B를 입력하세요. (ex. B) : ");
+                Back = sc.nextLine();
+                if (Back.equals("B")) {
+                    System.out.println("\n처음으로 돌아갑니다.\n");
+                    return;
+                }
+                System.out.println("오류! 잘못된 입력입니다. B만 입력가능합니다.");
             }
-            System.out.println("오류! 잘못된 입력입니다. B만 입력가능합니다.");
-
-
         }
 
     }
