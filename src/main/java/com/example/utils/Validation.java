@@ -467,8 +467,8 @@ public class Validation {
             boolean isContainRoomNum = sharedData.kcubes.stream()
                     .filter(kcube -> kcube.getName().equals(buildingName))
                     .map(Kcube::getRoom)
-                    .collect(Collectors.toList())
-                    .contains(roomToDelete);
+                    .anyMatch(room -> room.equals(roomToDelete));
+
             if (!isContainRoomNum) {
                 System.out.print("오류! 존재하지 않는 호실입니다. 다시 선택해주세요 (ex. 1) : ");
                 return false;
