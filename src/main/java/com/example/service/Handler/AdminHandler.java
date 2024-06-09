@@ -108,8 +108,8 @@ public class AdminHandler {
         }
 
         String max;
-        System.out.print(roomToAdd + "호실 최대 인원수를 입력해주세요 (2~20) : ");
         while (true) {
+            System.out.print(roomToAdd + "호실 최대 인원수를 입력해주세요 (2~20) : ");
             max = sc.nextLine();
             if (Validation.validateMax(max)) {
                 break;
