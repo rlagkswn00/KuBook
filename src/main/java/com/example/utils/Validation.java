@@ -446,9 +446,7 @@ public class Validation {
         boolean isDuplicateRoom = sharedData.kcubes.stream()
                 .filter(kcube -> kcube.getName().equals(buildingName))
                 .map(Kcube::getRoom)
-                .collect(Collectors.toList())
-                .contains(roomToAdd);
-
+                .anyMatch(room -> room.equals(roomToAdd));
 
         if (isDuplicateRoom) {
             System.out.println("오류! 이미 존재하는 호실입니다. 다시 입력해주세요 (ex. 1) :");
