@@ -302,12 +302,12 @@ public class AdminHandler {
                 .map(Kcube::getName)
                 .distinct()
                 .toList();
-
-        nameList.forEach(name -> System.out.print((nameList.indexOf(name) + 1) + ". " + name + " "));
         System.out.println();
         // 건물 번호 선택
         String buildingNum;
         while (true) {
+            nameList.forEach(name -> System.out.print((nameList.indexOf(name) + 1) + ". " + name + " "));
+            System.out.println();
             System.out.print("최대 인원수를 설정할 건물을 선택하세요 (ex. 1) : ");
             buildingNum = sc.nextLine();
             if (Validation.validateBuildingNum(buildingNum, nameList.size())) {
@@ -323,7 +323,7 @@ public class AdminHandler {
             System.out.print(i + ". " + i + "호실 ");
         }
         System.out.println();
-        System.out.println("최대 인원수를 설정할 호실을 선택해주세요 (ex. 1) : ");
+        System.out.print("최대 인원수를 설정할 호실을 선택해주세요 (ex. 1) : ");
         String roomToFix;
         while (true) {
             roomToFix = sc.nextLine();
@@ -337,7 +337,7 @@ public class AdminHandler {
                 maxToFix = k.getMax();
             }
         }
-        System.out.println("현재 " + buildingName + " " + roomToFix + "호실의 최대 인원수는 " + maxToFix + "명입니다. 새로 설정할 최대 인원수를 입력해주세요 (ex. 6) : ");
+        System.out.print("현재 " + buildingName + " " + roomToFix + "호실의 최대 인원수는 " + maxToFix + "명입니다. 새로 설정할 최대 인원수를 입력해주세요 (ex. 6) : ");
 
         String max;
         while (true) {
@@ -369,11 +369,11 @@ public class AdminHandler {
                 .map(Kcube::getName)
                 .distinct()
                 .toList();
-        nameList.forEach(name -> System.out.print((nameList.indexOf(name) + 1) + ". " + name + " "));
-        System.out.println();
 
         String buildingNum;
         while (true) {
+            nameList.forEach(name -> System.out.print((nameList.indexOf(name) + 1) + ". " + name + " "));
+            System.out.println();
             System.out.print("사용불가 설정할 건물을 선택하세요 (ex. 1) : ");
             buildingNum = sc.nextLine();
             if (Validation.validateBuildingNum(buildingNum, nameList.size())) {

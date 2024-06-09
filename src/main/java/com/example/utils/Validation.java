@@ -391,7 +391,7 @@ public class Validation {
 
     public static boolean validateFixMax(String buildingName, String roomToFix, String maxToFix, String max) {
         if (!max.matches("\\d+")) {
-            System.out.println("최대 인원수는 숫자로만 이루어져야 합니다. 다시 입력해주세요 (2~20) :  ");
+            System.out.print("최대 인원수는 숫자로만 이루어져야 합니다. 다시 입력해주세요 (2~20) :  ");
             return false;
         }
 
@@ -400,11 +400,11 @@ public class Validation {
             int intMax = Integer.parseInt(max);
             if (intMax > 20 || intMax < 2) {
                 /* 호실 존재 여부, 호실 개수 범위 예외처리 */
-                System.out.println("최대 인원수가 올바르지 않습니다. 다시 입력해주세요 (2~20) :  ");
+                System.out.print("최대 인원수가 올바르지 않습니다. 다시 입력해주세요 (2~20) :  ");
                 return false;
             }
             if (intMax == intMaxToFix) {
-                System.out.println("오류! 현재 설정되어 있는 인원수입니다. 다시 입력해주세요 (2~20) :");
+                System.out.print("오류! 현재 설정되어 있는 인원수입니다. 다시 입력해주세요 (2~20) :");
                 return false;
             }
             Map<Date, List<Reservation>> reservationList = sharedData.reservationList;
@@ -420,7 +420,7 @@ public class Validation {
                             && (Integer.parseInt(reservation.getNumOfPeople()) > intMax));
 
             if (isOverFlowPeople) {
-                System.out.print("오류! 입력한 최대 인원수를 넘어가는 예약 목록이 존재합니다. 다시 입력해주세요. (2~20)  ");
+                System.out.print("오류! 입력한 최대 인원수를 넘어가는 예약 목록이 존재합니다. 다시 입력해주세요. (2~20)  :");
                 return false;
             }
         } catch (NumberFormatException e) {
