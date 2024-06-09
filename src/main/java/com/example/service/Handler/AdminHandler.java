@@ -29,14 +29,11 @@ public class AdminHandler {
         String buildingName;
         while (true) {
             buildingName = sc.nextLine();
-            boolean isDuplicate = sharedData.kcubes.stream()
-                    .map(Kcube::getName)
-                    .toList()
-                    .contains(buildingName);
-            if (!isDuplicate) {
+
+            if(Validation.validateBuildingName(buildingName)){
                 break;
             }
-            System.out.print("오류! 케이큐브에 이미 존재하는 건물의 이름입니다. 다시 입력해주세요 (ex. 공학관) :");
+
         }
 
         String roomNum;

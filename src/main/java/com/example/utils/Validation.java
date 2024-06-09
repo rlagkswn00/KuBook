@@ -795,4 +795,34 @@ public class Validation {
         // 주말인지 확인
         return dayOfWeek.equals("토") || dayOfWeek.equals("일");
     }
+
+
+    public static boolean validateBuildingName(String buildingName) {
+        if (buildingName == null) {
+            printErrorMessage("buildingName is null");
+            return false;
+        }
+
+        boolean isDuplicate = sharedData.kcubes.stream()
+                .map(Kcube::getName)
+                .toList()
+                .contains(buildingName);
+
+        if (isDuplicate) {
+            System.out.print("오류! 케이큐브에 이미 존재하는 건물의 이름입니다. 다시 입력해주세요 (ex. 공학관) :");
+            return false;
+        }
+
+        if (!buildingName.matches("^[가-힣]+$")) {
+            System.out.print("오류! 건물 이름은 완전한 음절로 이루어져야 합니다. 다시 입력해주세요 (ex. 공학관) :");
+            return false;
+        }
+
+        if(buildingName.length() < 2 || buildingName.length() > 10) {
+            System.out.print("오류! 건물 이름의 길이는 2~10 사이여야 합니다. 다시 입력해주세요 (ex. 공학관) :");
+            return false;
+        }
+
+        return true;
+    }
 }
