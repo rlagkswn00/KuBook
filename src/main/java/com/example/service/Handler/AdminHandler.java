@@ -172,7 +172,7 @@ public class AdminHandler {
                     Thread.currentThread().interrupt();
                 }
             }
-            System.out.println("오류! 해당 건물은 예약 목록이 존재합니다. 다시 선택해주세요. (ex.2) : ");
+            System.out.println("오류! 해당 건물은 예약 목록이 존재합니다. 다시 선택해주세요.");
         }
     }
 
