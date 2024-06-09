@@ -24,7 +24,7 @@ public class AdminService extends Service {
         Scanner sc = new Scanner(System.in);
         while (true) {
             System.out.println("1. 사용불가 설정 2. 건물/호실 추가 및 삭제 3. 최대인원수 설정 4. 종료하기");
-            System.out.println("메뉴를 선택하세요 (ex. 1) :");
+            System.out.print("메뉴를 선택하세요 (ex. 1) : ");
             String menu = sc.nextLine();
             switch (menu) {
                 case "1":
