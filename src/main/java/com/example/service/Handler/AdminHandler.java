@@ -427,7 +427,7 @@ public class AdminHandler {
     public String readDate() {
         Scanner sc = new Scanner(System.in);
         List<String> dates = FileManager.dateGenerator(sharedData.getCurrentTime().getDate());
-        dates.forEach(date -> System.out.print("(" + dates.indexOf(date) + ") " + date + " "));
+        dates.forEach(date -> System.out.print("(" + dates.indexOf(date) + ") " + date + "["+ Date.getDayOfWeek(date) + "] "));
         System.out.println();
 
         String dateNum;
