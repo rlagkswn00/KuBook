@@ -44,7 +44,7 @@ public class AdminService extends Service {
                     System.exit(0);
                     break;
                 default:
-                    System.out.println("오류! 메뉴에 없는 입력입니다. 다시 입력해주세요.\n");
+                    System.out.println("오류! 메뉴에 없는 입력입니다. 다시 입력해주세요.\n메뉴를 선택하세요 (ex. 1) : ");
                     break;
             }
         }
@@ -69,7 +69,7 @@ public class AdminService extends Service {
             String menu = sc.nextLine();
             boolean isValidInput = Arrays.asList(menus).contains(menu);
             if (!isValidInput) {
-                System.out.println("오류! 메뉴에 없는 입력입니다. 다시 입력해주세요.\n");
+                System.out.println("오류! 메뉴에 없는 입력입니다. 다시 입력해주세요.\n 메뉴를 선택하세요 (ex. 1) : ");
                 continue;
             }
             System.out.println("\n...선택한 메뉴 창으로 이동...\n");

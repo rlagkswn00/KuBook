@@ -46,7 +46,7 @@ public class UserService extends Service {
                     System.exit(0);
                     break;
                 default:
-                    System.out.println("오류! 메뉴에 없는 입력입니다. 다시 입력해주세요.\n");
+                    System.out.println("오류! 메뉴에 없는 입력입니다. 다시 입력해주세요.\n메뉴를 선택하세요 (ex. 1) : ");
                     break;
             }
         }
