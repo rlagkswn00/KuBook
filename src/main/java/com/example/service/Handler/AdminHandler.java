@@ -54,7 +54,8 @@ public class AdminHandler {
                     break;
                 }
             }
-            kcubesToAdd.add(Kcube.from(buildingName, roomNum, max));
+            kcubesToAdd.add(Kcube.from(buildingName, Integer.toString(i), max));
+
         }
         sharedData.kcubes.addAll(kcubesToAdd);
         System.out.println("케이큐브에 " + buildingName + "이 정상적으로 추가되었습니다. 5초 후 관리자 모드메뉴로 돌아갑니다.");
