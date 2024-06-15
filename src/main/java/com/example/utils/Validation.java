@@ -436,7 +436,7 @@ public class Validation {
             if (!roomToAdd.matches("\\d+")) {
                 throw new NumberFormatException();
             }
-            if (intRoomToAdd > 9 || intRoomToAdd < 2) {
+            if (intRoomToAdd > 9 || intRoomToAdd < 1) {
                 throw new NumberFormatException();
             }
         } catch (NumberFormatException e) {
