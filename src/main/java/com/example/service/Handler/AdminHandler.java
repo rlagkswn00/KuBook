@@ -87,12 +87,12 @@ public class AdminHandler {
         }
         String finalBuildingNum = buildingNum;
         String buildingName = nameList.get(Integer.parseInt(finalBuildingNum) - 1);
-        long currentRoomCount = kcubes.stream()
-                .filter(sharedDateKcube -> sharedDateKcube.getName().equals(buildingName))
-                .count();
-        System.out.println(buildingName + " 호실 목록입니다.");
-        for (int i = 1; i <= currentRoomCount; i++) {
-            System.out.print(i + ". " + i + "호실 ");
+        List<String> roomList = kcubes.stream()
+                .map(Kcube::getRoom)
+                .distinct()
+                .toList();
+        for (int i = 1; i <= roomList.size(); i++) {
+            System.out.print(i + ". " + roomList.get(i - 1) + "호실 ");
         }
         System.out.println();
 
@@ -116,11 +116,12 @@ public class AdminHandler {
         sharedData.kcubes
                 .add(Kcube.from(buildingName, roomToAdd, max));
 
-        currentRoomCount = kcubes.stream()
-                .filter(sharedDateKcube -> sharedDateKcube.getName().equals(buildingName))
-                .count();
-        for (int i = 1; i <= currentRoomCount; i++) {
-            System.out.print(i + ". " + i + "호실 ");
+        roomList = kcubes.stream()
+                .map(Kcube::getRoom)
+                .distinct()
+                .toList();
+        for (int i = 1; i <= roomList.size(); i++) {
+            System.out.print(i + ". " + roomList.get(i - 1) + "호실 ");
         }
         System.out.println();
         System.out.println(buildingName + "에 " + roomToAdd + "호실이 정상적으로 추가되었습니다. 5초 후 관리자 모드 메뉴로 돌아갑니다.");
@@ -209,12 +210,12 @@ public class AdminHandler {
             }
         }
         String buildingName = nameList.get(Integer.parseInt(buildingNum) - 1);
-        long currentRoomCount = kcubes.stream()
-                .filter(sharedDateKcube -> sharedDateKcube.getName().equals(buildingName))
-                .count();
-        System.out.println(buildingName + " 호실 목록입니다.");
-        for (int i = 1; i <= currentRoomCount; i++) {
-            System.out.print(i + ". " + i + "호실 ");
+        List<String> roomList = kcubes.stream()
+                .map(Kcube::getRoom)
+                .distinct()
+                .toList();
+        for (int i = 1; i <= roomList.size(); i++) {
+            System.out.print(i + ". " + roomList.get(i - 1) + "호실 ");
         }
         System.out.println();
 
@@ -222,6 +223,7 @@ public class AdminHandler {
         String roomToDelete;
         while (true) {
             roomToDelete = sc.nextLine();
+            roomToDelete = roomList.get(Integer.parseInt(roomToDelete)-1);
             if (Validation.validateDeleteRoom(buildingName, roomToDelete)) {
                 break;
             }
@@ -328,12 +330,12 @@ public class AdminHandler {
             }
         }
         String buildingName = nameList.get(Integer.parseInt(buildingNum) - 1);
-        long currentRoomCount = kcubes.stream()
-                .filter(sharedDateKcube -> sharedDateKcube.getName().equals(buildingName))
-                .count();
-        System.out.println(buildingName + " 호실 목록입니다.");
-        for (int i = 1; i <= currentRoomCount; i++) {
-            System.out.print(i + ". " + i + "호실 ");
+        List<String> roomList = kcubes.stream()
+                .map(Kcube::getRoom)
+                .distinct()
+                .toList();
+        for (int i = 1; i <= roomList.size(); i++) {
+            System.out.print(i + ". " + roomList.get(i - 1) + "호실 ");
         }
         System.out.println();
         System.out.print("최대 인원수를 설정할 호실을 선택해주세요 (ex. 1) : ");
