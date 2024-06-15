@@ -115,6 +115,21 @@ public class AdminHandler {
         }
         sharedData.kcubes
                 .add(Kcube.from(buildingName, roomToAdd, max));
+
+        currentRoomCount = kcubes.stream()
+                .filter(sharedDateKcube -> sharedDateKcube.getName().equals(buildingName))
+                .count();
+        for (int i = 1; i <= currentRoomCount; i++) {
+            System.out.print(i + ". " + i + "호실 ");
+        }
+        System.out.println();
+        System.out.println(buildingName + "에 " + roomToAdd + "호실이 정상적으로 추가되었습니다. 5초 후 관리자 모드 메뉴로 돌아갑니다.");
+        try {
+            Thread.sleep(5000);
+            return;
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
     }
 
     public void deleteBuilding() {
